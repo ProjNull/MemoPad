@@ -1,5 +1,5 @@
 # Stage 1: Build frontend using pnpm
-FROM node:18-alpine AS frontend-build
+FROM node:22.14.0-alpine AS frontend-build
 
 WORKDIR /memopad
 
@@ -22,7 +22,7 @@ COPY frontend/ ./
 RUN pnpm build
 
 # Stage 2: Build backend using gradle
-FROM gradle:8.1.1-jdk21 AS backend-build
+FROM gradle:8.12-jdk21 AS backend-build
 
 WORKDIR /memopad/backend
 
@@ -39,7 +39,7 @@ COPY backend/ ./
 RUN gradle build bootJar
 
 # Stage 3: Run the backend
-FROM openjdk:21-jdk-alpine
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /memopad
 
