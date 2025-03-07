@@ -1,0 +1,123 @@
+services:
+  # Memopad it self
+  app:
+    build: .
+    container_name: memopad
+    ports:
+      - "8080:8080"
+    environment:
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_USER=memopad
+      - PG_PASSWORD=memopad
+      - PG_DATABASE=memopad
+      - ES_HOST=elasticsearch
+      - ES_PORT=9200
+    depends_on:
+      - postgres
+      - elasticsearch
+  
+  # Init service (configures Infrastructure)
+  init-service:
+    image: curlimages/curl:latest
+    container_name: init-service
+    restart: never
+    depends_on:
+      - connect
+      - elasticsearch
+      - postgres
+    entrypoint: ["/bin/sh", "-c", "/scripts/infra-init.sh"]
+    volumes:
+      - ./scripts/infra-init.sh:/scripts/infra-init.sh
+
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: mydb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Zookeeper for Kafka Coordination
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    container_name: zookeeper
+    restart: always
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+    ports:
+      - "2181:2181"
+
+  # Kafka Broker
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    restart: always
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    ports:
+      - "9092:9092"
+
+  # Kafka Connect with Debezium for Change Data Capture (CDC)
+  connect:
+    image: debezium/connect:3.0.0.Final
+    container_name: kafka-connect
+    restart: always
+    depends_on:
+      - kafka
+    environment:
+      BOOTSTRAP_SERVERS: kafka:9092
+      GROUP_ID: "1"
+      CONFIG_STORAGE_TOPIC: debezium_connect_configs
+      OFFSET_STORAGE_TOPIC: debezium_connect_offsets
+      STATUS_STORAGE_TOPIC: debezium_connect_status
+    ports:
+      - "8083:8083"
+
+  # Elasticsearch for Fuzzy Searching
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
+    restart: always
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+
+  # Kibana for Viewing Elasticsearch Data (Optional)
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.4.3
+    restart: never
+    container_name: kibana
+    depends_on:
+      - elasticsearch
+    ports:
+      - "5601:5601"
+
+  # Adminer for Database Management (Optional)
+  adminer:
+    image: adminer
+    container_name: adminer
+    restart: never
+    ports:
+      - "8081:8081"
+
+volumes:
+  pgdata:
+  esdata:
