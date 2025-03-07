@@ -13,11 +13,11 @@ curl -X POST http://connect:8083/connectors -H "Content-Type: application/json" 
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
     "database.hostname": "postgres",
     "database.port": "5432",
-    "database.user": "myuser",
-    "database.password": "mypassword",
-    "database.dbname": "mydb",
+    "database.user": "memopad",
+    "database.password": "memopad",
+    "database.dbname": "memopad",
     "database.server.name": "postgres",
-    "table.include.list": "public.notes",
+    "table.include.list": "public.note",
     "slot.name": "debezium_slot",
     "plugin.name": "pgoutput",
     "publication.autocreate.mode": "filtered"
@@ -31,11 +31,13 @@ curl -X POST http://connect:8083/connectors -H "Content-Type: application/json" 
     "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
     "connection.url": "http://elasticsearch:9200",
     "tasks.max": "1",
-    "topics": "postgres.public.notes",
+    "topics": "postgres.public.note",
     "key.ignore": "true",
     "schema.ignore": "true",
     "type.name": "_doc",
-    "behavior.on.null.values": "delete"
+    "behavior.on.null.values": "delete",
+    "connection.username": "memopad",
+    "connection.password": "memopad"
   }
 }'
 
