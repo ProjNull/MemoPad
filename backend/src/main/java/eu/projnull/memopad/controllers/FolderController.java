@@ -66,7 +66,7 @@ public class FolderController {
      * Creates a new folder in the given folder.
      *
      * @param id   the ID of the folder to create the child in
-     * @param name the name of the folder to create
+     * @param folderCreate the folder to create
      * @return the created folder
      */
     @PostMapping("/{id}/create")
@@ -99,7 +99,7 @@ public class FolderController {
      * name is in the request body.
      * 
      * @param id      the ID of the folder to rename
-     * @param newName the new name of the folder
+     * @param folderNameUpdate the new name of the folder
      * @return the renamed folder
      */
     @PostMapping("/{id}/rename")

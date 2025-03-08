@@ -33,9 +33,7 @@ public class NoteController {
     /**
      * Creates a new note in the given folder with the given name and content.
      *
-     * @param folderId the ID of the folder to create the note in
-     * @param name     the name of the note to create
-     * @param content  the content of the note to create, or null if no content
+     * @param noteCreate the note to create
      * @return the created note response
      */
     @PostMapping("/create")
@@ -69,8 +67,8 @@ public class NoteController {
     /**
      * Moves a note to a new folder.
      * 
-     * @param id       the ID of the note to move
-     * @param folderId the ID of the folder to move the note to
+     * @param id      the ID of the note to move
+     * @param noteFolderUpdate the folder to move the note to
      * @return the moved note
      */
     @PostMapping("/{id}/move")
@@ -89,7 +87,7 @@ public class NoteController {
      * name is in the request body.
      * 
      * @param id      the ID of the note to rename
-     * @param newName the new name of the note
+     * @param noteNameUpdate the new name of the note
      * @return the renamed note response
      */
 
@@ -122,7 +120,7 @@ public class NoteController {
      * Updates the content of a note.
      *
      * @param id      the ID of the note to update
-     * @param content the new content of the note
+     * @param noteContentUpdate the new content of the note
      * @return the updated note response
      */
     @PostMapping("/{id}/content")
@@ -135,3 +133,4 @@ public class NoteController {
         return new NoteResponse(updatedNote);
     }
 }
+
