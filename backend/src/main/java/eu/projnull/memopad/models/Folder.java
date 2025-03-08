@@ -3,6 +3,8 @@ package eu.projnull.memopad.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.lang.Nullable;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +28,7 @@ public class Folder {
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
-    private Folder parentFolder;
+    private @Nullable Folder parentFolder;
 
     @OneToMany(mappedBy = "parentFolder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Folder> subFolders = new ArrayList<>();
