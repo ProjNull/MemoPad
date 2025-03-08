@@ -2,9 +2,15 @@ package eu.projnull.memopad.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import eu.projnull.memopad.controllers.dto.FolderCreate;
+import eu.projnull.memopad.controllers.dto.FolderNameUpdate;
 import eu.projnull.memopad.controllers.dto.FolderResponse;
+import eu.projnull.memopad.controllers.dto.NoteResponse;
 import eu.projnull.memopad.models.Folder;
 import eu.projnull.memopad.services.FolderService;
+import eu.projnull.memopad.services.NoteService;
+
+import java.util.List;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,9 +23,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/folders")
 public class FolderController {
     private final FolderService folderService;
+    private final NoteService noteService;
 
-    public FolderController(FolderService folderService) {
+    public FolderController(FolderService folderService, NoteService noteService) {
         this.folderService = folderService;
+        this.noteService = noteService;
     }
 
     /**
@@ -62,9 +70,10 @@ public class FolderController {
      * @return the created folder
      */
     @PostMapping("/{id}/create")
-    public FolderResponse createChild(@PathVariable Long id, @RequestBody String name) {
+    public FolderResponse createChild(@PathVariable Long id, @RequestBody FolderCreate folderCreate) {
         // TODO: Actually get current user
         long userId = 1;
+        String name = folderCreate.getName();
         Folder parentFolder = folderService.getFolder(userId, id);
         Folder folder = folderService.createFolder(userId, name, parentFolder);
         return new FolderResponse(folder);
@@ -94,9 +103,10 @@ public class FolderController {
      * @return the renamed folder
      */
     @PostMapping("/{id}/rename")
-    public FolderResponse renameFolder(@PathVariable Long id, @RequestBody String newName) {
+    public FolderResponse renameFolder(@PathVariable Long id, @RequestBody FolderNameUpdate folderNameUpdate) {
         // TODO: Actually get current user
         long userId = 1;
+        String newName = folderNameUpdate.getName();
         Folder folder = folderService.getFolder(userId, id);
         Folder renamedFolder = folderService.renameFolder(userId, folder, newName);
         return new FolderResponse(renamedFolder);
@@ -118,4 +128,33 @@ public class FolderController {
         folderService.moveFolder(userId, folder, parentFolder);
         return new FolderResponse(folder);
     }
+
+    /**
+     * Retrieves all files (notes) in a folder.
+     * 
+     * @param id the ID of the folder to retrieve files from
+     * @return a list of the notes in the folder
+     */
+    @GetMapping("/{id}/files")
+    public List<NoteResponse> getFiles(@PathVariable Long id) {
+        // TODO: Actually get current user
+        long userId = 1;
+        Folder folder = folderService.getFolder(userId, id);
+        return noteService.getNotesInFolder(userId, folder).stream().map(NoteResponse::new).toList();
+    }
+
+    /**
+     * Retrieves all subfolders in a folder.
+     *
+     * @param id the ID of the folder to retrieve subfolders from
+     * @return a list of the subfolders in the folder
+     */
+    @GetMapping("/{id}/folders")
+    public List<FolderResponse> getFolders(@PathVariable Long id) {
+        // TODO: Actually get current user
+        long userId = 1;
+        Folder folder = folderService.getFolder(userId, id);
+        return folder.getSubFolders().stream().map(FolderResponse::new).toList();
+    }
+
 }
