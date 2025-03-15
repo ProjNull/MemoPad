@@ -1,13 +1,13 @@
 #!/bin/bash
 
 echo "Waiting for Kafka Connect to be available..."
-while ! curl -s http://connect:8083/ | grep -q "version"; do
+while ! curl -s http://localhost:8083/ | grep -q "version"; do
   echo "Kafka Connect is not ready yet. Retrying in 5 seconds..."
   sleep 5
 done
 
 echo "Registering PostgreSQL Debezium Connector..."
-curl -X POST http://connect:8083/connectors -H "Content-Type: application/json" -d '{
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d '{
   "name": "postgres-connector",
   "config": {
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
@@ -20,12 +20,13 @@ curl -X POST http://connect:8083/connectors -H "Content-Type: application/json" 
     "table.include.list": "public.note",
     "slot.name": "debezium_slot",
     "plugin.name": "pgoutput",
-    "publication.autocreate.mode": "filtered"
+    "publication.autocreate.mode": "filtered",
+    "topic.prefix": "postgres"
   }
 }'
 
 echo "Registering Elasticsearch Sink Connector..."
-curl -X POST http://connect:8083/connectors -H "Content-Type: application/json" -d '{
+curl -X POST http://localhost:8083/connectors -H "Content-Type: application/json" -d '{
   "name": "elasticsearch-sink",
   "config": {
     "connector.class": "io.confluent.connect.elasticsearch.ElasticsearchSinkConnector",
