@@ -53,7 +53,7 @@ public class FolderController {
      *         does not belong to the user
      */
     @GetMapping("/{id}")
-    public FolderResponse getFolder(@PathVariable Long id) {
+    public FolderResponse getFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         try {
@@ -72,7 +72,7 @@ public class FolderController {
      * @return the created folder
      */
     @PostMapping("/{id}/create")
-    public FolderResponse createChild(@PathVariable Long id, @RequestBody FolderCreate folderCreate) {
+    public FolderResponse createChild(@PathVariable(value = "id") Long id, @RequestBody FolderCreate folderCreate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         String name = folderCreate.getName();
@@ -88,7 +88,7 @@ public class FolderController {
      * @return "deleted"
      */
     @DeleteMapping("/{id}/delete")
-    public String deleteFolder(@PathVariable Long id) {
+    public String deleteFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
@@ -105,7 +105,7 @@ public class FolderController {
      * @return the renamed folder
      */
     @PostMapping("/{id}/rename")
-    public FolderResponse renameFolder(@PathVariable Long id, @RequestBody FolderNameUpdate folderNameUpdate) {
+    public FolderResponse renameFolder(@PathVariable(value = "id") Long id, @RequestBody FolderNameUpdate folderNameUpdate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         String newName = folderNameUpdate.getName();
@@ -122,7 +122,7 @@ public class FolderController {
      * @return the moved folder
      */
     @PostMapping("/{id}/move/{parentId}")
-    public FolderResponse moveFolder(@PathVariable Long id, @PathVariable Long parentId) {
+    public FolderResponse moveFolder(@PathVariable(value = "id") Long id, @PathVariable(value = "parentId") Long parentId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
@@ -138,7 +138,7 @@ public class FolderController {
      * @return a list of the notes in the folder
      */
     @GetMapping("/{id}/files")
-    public List<NoteResponse> getFiles(@PathVariable Long id) {
+    public List<NoteResponse> getFiles(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
@@ -152,7 +152,7 @@ public class FolderController {
      * @return a list of the subfolders in the folder
      */
     @GetMapping("/{id}/folders")
-    public List<FolderResponse> getFolders(@PathVariable Long id) {
+    public List<FolderResponse> getFolders(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
