@@ -1,0 +1,12 @@
+<div class="w-screen h-screen flex justify-center items-center">
+    <div class="card w-64 bg-base-200 card-xs shadow-sm">
+        <div class="card-body">
+            <h2 class="card-title">Login</h2>
+            
+            <div class="card-actions flex-col">
+                <button class="btn w-full btn-primary" (click)="login()">Login</button>
+                <button class="btn w-full btn-secondary btn-outline" (click)="global.go('/auth/register')">Register</button>
+            </div>
+        </div>
+    </div>
+</div>
