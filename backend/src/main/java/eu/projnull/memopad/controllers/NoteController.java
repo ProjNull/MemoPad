@@ -10,9 +10,11 @@ import eu.projnull.memopad.controllers.dto.NoteNameUpdate;
 import eu.projnull.memopad.controllers.dto.NoteResponse;
 import eu.projnull.memopad.models.Folder;
 import eu.projnull.memopad.models.Note;
+import eu.projnull.memopad.models.User;
 import eu.projnull.memopad.services.FolderService;
 import eu.projnull.memopad.services.NoteService;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,8 +40,8 @@ public class NoteController {
      */
     @PostMapping("/create")
     public NoteResponse createNote(@RequestBody NoteCreate noteCreate) {
-        // TODO: Actually get current user
-        long userId = 1;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
 
         long folderId = noteCreate.getFolderId();
         String name = noteCreate.getName();
@@ -59,8 +61,8 @@ public class NoteController {
      */
     @GetMapping("/{id}")
     public NoteResponse get(@PathVariable Long id) {
-        // TODO: Actually get current user
-        long userId = 1;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
         return new NoteResponse(noteService.getNote(userId, id));
     }
 
@@ -73,8 +75,8 @@ public class NoteController {
      */
     @PostMapping("/{id}/move")
     public NoteResponse moveNote(@PathVariable Long id, @RequestBody NoteFolderUpdate noteFolderUpdate) {
-        // TODO: Actually get current user
-        long userId = 1;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
         long folderId = noteFolderUpdate.getFolderId();
         Folder folder = folderService.getFolder(userId, folderId);
         Note note = noteService.getNote(userId, id);
@@ -93,8 +95,8 @@ public class NoteController {
 
     @PostMapping("/{id}/rename")
     public NoteResponse renameNote(@PathVariable Long id, @RequestBody NoteNameUpdate noteNameUpdate) {
-        // TODO: Actually get current user
-        long userId = 1;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
         String newName = noteNameUpdate.getName();
         Note note = noteService.getNote(userId, id);
         Note renamedNote = noteService.renameNote(userId, note, newName);
@@ -109,8 +111,8 @@ public class NoteController {
      */
     @DeleteMapping("/{id}/delete")
     public String deleteNote(@PathVariable Long id) {
-        // TODO: Actually get current user
-        long userId = 1;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
         Note note = noteService.getNote(userId, id);
         noteService.deleteNote(userId, note);
         return "deleted";
@@ -125,8 +127,8 @@ public class NoteController {
      */
     @PostMapping("/{id}/content")
     public NoteResponse updateContent(@PathVariable Long id, @RequestBody NoteContentUpdate noteContentUpdate) {
-        // TODO: Actually get current user
-        long userId = 1;
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        long userId = user.getId();
         String content = noteContentUpdate.getContent();
         Note note = noteService.getNote(userId, id);
         Note updatedNote = noteService.updateNoteContent(userId, note, content);

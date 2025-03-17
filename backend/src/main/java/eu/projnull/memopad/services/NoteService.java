@@ -1,7 +1,6 @@
 package eu.projnull.memopad.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;

@@ -19,7 +19,7 @@ public class DatasourceConfig {
 
         if (dbHost == null || dbPort == null || dbName == null || dbUser == null || dbPassword == null) {
             throw new NullPointerException(
-                    "One of the environment variables DB_HOST, DB_PORT, DB_NAME, DB_USER or DB_PASSWORD is not set!");
+                    "One of the environment variables PG_HOST, PG_PORT, PG_NAME, PG_USER or PG_PASSWORD is not set!");
         }
 
         dataSourceBuilder.driverClassName("org.postgresql.Driver");
@@ -34,3 +34,4 @@ public class DatasourceConfig {
         return dataSourceBuilder.build();
     }
 }
+

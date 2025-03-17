@@ -3,10 +3,14 @@ package eu.projnull.memopad.services;
 import java.security.SecureRandom;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Optional;
+
 import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Service;
 import eu.projnull.memopad.models.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -14,11 +18,11 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class JWTService {
+public class JwtService {
     private static final Long SECONDS_ONE_DAY = 60L * 60L * 24L;
     private String jwtSecret;
 
-    public JWTService() {
+    public JwtService() {
         this.jwtSecret = System.getenv("JWT_SECRET");
         if (this.jwtSecret == null) {
             // Generate a random secret
@@ -78,5 +82,14 @@ public class JWTService {
             return false;
         }
         return true;
+    }
+
+    public Optional<Long> getUserIdFromToken(String token) {
+        try {
+            Jws<Claims> jwt = Jwts.parser().verifyWith(getJwtSecretKey()).build().parseSignedClaims(token);
+            return Optional.of(Long.parseLong(jwt.getPayload().getSubject()));
+        } catch (JwtException | NumberFormatException e) {
+            return Optional.empty();
+        }
     }
 }

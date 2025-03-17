@@ -9,13 +9,31 @@
             "name": "MemopadApplication",
             "request": "launch",
             "mainClass": "eu.projnull.memopad.MemopadApplication",
-            "projectName": "backend",
+            "cwd": "${workspaceFolder}/backend",
             "env": {
-                "PG_USER": "memopad",
-                "PG_PASSWORD": "memopad",
+                "PG_USER": "root",
+                "PG_PASSWORD": "root",
                 "PG_DATABASE": "memopad",
                 "PG_HOST": "localhost",
-                "PG_PORT": "5432"
+                "PG_PORT": "5432",
+                "JWT_SECRET": "556db234f6dcbaebd6a2ca94d6d77911"
+            }
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MemopadApplication<memopad-backend>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}/backend",
+            "mainClass": "eu.projnull.memopad.MemopadApplication",
+            "projectName": "memopad-backend",
+            "args": "",
+            "env": {
+                "PG_USER": "root",
+                "PG_PASSWORD": "root",
+                "PG_DATABASE": "memopad",
+                "PG_HOST": "localhost",
+                "PG_PORT": "5432",
+                "JWT_SECRET": "556db234f6dcbaebd6a2ca94d6d77911"
             }
         }
     ]
