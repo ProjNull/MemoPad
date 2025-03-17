@@ -3,6 +3,7 @@ package eu.projnull.memopad.controllers;
 import org.springframework.web.bind.annotation.RestController;
 
 import eu.projnull.memopad.controllers.dto.FolderCreate;
+import eu.projnull.memopad.controllers.dto.FolderDeletedJson;
 import eu.projnull.memopad.controllers.dto.FolderNameUpdate;
 import eu.projnull.memopad.controllers.dto.FolderResponse;
 import eu.projnull.memopad.controllers.dto.NoteResponse;
@@ -88,12 +89,12 @@ public class FolderController {
      * @return "deleted"
      */
     @DeleteMapping("/{id}/delete")
-    public String deleteFolder(@PathVariable(value = "id") Long id) {
+    public FolderDeletedJson deleteFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
         folderService.deleteFolder(userId, folder);
-        return "deleted";
+        return new FolderDeletedJson("Folder deleted.");
     }
 
     /**
