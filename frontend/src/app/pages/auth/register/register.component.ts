@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { GlobalService } from '../../../global.service';
 import { ApiService } from '../../../api.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -11,11 +12,21 @@ import { ApiService } from '../../../api.service';
 export class RegisterComponent {
   constructor(public global:GlobalService, private api:ApiService) {}
 
-  register() {
-    this.global.pushToast("info", "Registering in.");
-    this.api.register("jan","test", "honzik@janpalma.cz")?.subscribe(()=> {
-      this.global.pushToast("success", "Registration Succsess");
-      this.global.go("/");
+
+  registerForm = new FormGroup({
+      username: new FormControl(''),
+      password: new FormControl(''),
+      email: new FormControl(''),
     });
+  
+
+  register() {
+    const vars = this.registerForm.value;
+    if (vars.username && vars.password && vars.email) {
+      this.global.pushToast("info", "Registering in.");
+      this.api.register(vars.username,vars.password, vars.email)
+    } else {
+      this.global.pushToast("warning","Wrong Input");
+    }
   }
 }

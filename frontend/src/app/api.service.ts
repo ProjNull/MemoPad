@@ -75,16 +75,13 @@ export class ApiService {
         password: pass
       })
 
-      request.subscribe({
-        next: (response) => {
+      request = request.pipe(catchError((val) => this.handleError(val)))
+      request.subscribe((response) => {
           this.mainLoading =false;
           this.token = response.token;
           localStorage.setItem("token",this.token);
-        },
-        error: (response) => {
-          this.handleError(response);
-          this.mainLoading =false;
-        }
+          this.g.pushToast("success", "Login Succsess");
+          this.g.go("/");
       })
 
       return request;
@@ -101,18 +98,14 @@ export class ApiService {
         email: email,
       })
 
-
-      request.subscribe({
-        next: (response) => {
+      request = request.pipe(catchError((val) => this.handleError(val)))
+      request.subscribe((response) => {
           this.mainLoading =false;
 
           this.token = response.token;
           localStorage.setItem("token",this.token);
-        },
-        error: (response) => {
-          this.handleError(response);
-          this.mainLoading =false;
-        }
+          this.g.pushToast("success", "Registration Succsess");
+          this.g.go("/");
       })
 
       return request;
@@ -141,6 +134,10 @@ export class ApiService {
 
   }
 
+  logout() {
+    this.token = null;
+    localStorage.clear();
+  }
 
   newFolder(parentId:number, name:string) {
     this.g.pushToast("info", "Creating: " + name);

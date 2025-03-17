@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { FormGroup, FormControl } from '@angular/forms';
 import { ApiService } from '../../../api.service';
 import { GlobalService } from '../../../global.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -11,12 +13,18 @@ import { GlobalService } from '../../../global.service';
 export class LoginComponent {
   constructor(public global:GlobalService, private api:ApiService) {}
 
+  loginForm = new FormGroup({
+    username: new FormControl(''),
+    password: new FormControl(''),
+  });
+
   login() {
-    this.global.pushToast("info", "Loggin in.");
-    this.api.login("jan","test")?.subscribe((response)=> {
-      this.global.pushToast("success", "Login Succsess");
-      this.api.token = response.token;
-      this.global.go("/");
-    });
+    const vars = this.loginForm.value;
+    if (vars.username && vars.password) {
+      this.global.pushToast("info", "Loggin in.");
+      this.api.login(vars.username,vars.password);
+    } else {
+      this.global.pushToast("warning","Wrong Input");
+    }
   }
 }

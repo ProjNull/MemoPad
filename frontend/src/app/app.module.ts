@@ -8,6 +8,7 @@ import { RegisterComponent } from './pages/auth/register/register.component';
 import { provideHttpClient } from '@angular/common/http';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { FolderViewItemComponent } from './components/folder-view-item/folder-view-item.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { FolderViewItemComponent } from './components/folder-view-item/folder-vi
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent]
