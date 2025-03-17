@@ -1,4 +1,5 @@
-@if (folderName) {
+@if (deleted) {
+} @else if (folderName) {
     <li>
         <div class="flex p-0">
         
@@ -13,10 +14,12 @@
             </a>
 
             <div class="dropdown">
-                <div tabindex="0" role="button" class="btn block btn-ghost btn-primary p-0 w-6 h-6 mr-2">:</div>
-                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
+                <div tabindex="0" role="button" class="btn block btn-ghost rounded-full border-0 p-0 w-6 h-6 mr-2">:</div>
+                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
                     <li><a (click)="newFolder()">New Folder</a></li>
                     <li><a (click)="newNote()">New Note</a></li>
+                    <li><a (click)="renameFolder()">Rename Folder</a></li>
+                    <li><a (click)="deleteFolder()">Delete Folder</a></li>
                 </ul>
             </div>
         </div>
@@ -25,7 +28,7 @@
                 @if (childIds.length > 0) {
                 
                     @for (id of childIds; track $index) {
-                        <app-folder-view-item [folder-id]="id"></app-folder-view-item>
+                        <app-folder-view-item (fullReload)="doFullReload()" [folder-id]="id"></app-folder-view-item>
                     }
                 }
             </ul>

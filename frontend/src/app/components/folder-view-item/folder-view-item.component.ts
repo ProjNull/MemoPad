@@ -1,4 +1,4 @@
-import { Component, Input, model, OnInit } from '@angular/core';
+import { Component, Input, model, OnInit, output, Output } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { GlobalService } from '../../global.service';
 
@@ -11,7 +11,11 @@ import { GlobalService } from '../../global.service';
 export class FolderViewItemComponent implements OnInit {
 
   @Input("folder-id") folderID = -0;
+  @Input("open") openByDefault = false;
 
+  fullReload = output<void>();
+
+  deleted = false;
   show = model(false);
 
 
@@ -21,10 +25,19 @@ export class FolderViewItemComponent implements OnInit {
   childIds:number[] = []
   ngOnInit(): void {
     this.loadFolder();
+    if (this.openByDefault) {
+      this.show.set(true);
+    }
+  }
+
+  doFullReload() {
+    this.loadFolder();
+    this.fullReload.emit();
   }
 
   loadFolder() {
     this.folderName = null;
+    
     this.api.getFolder(this.folderID).subscribe((resp) => {
       this.folderName = resp.name;
       this.folderID = resp.id;
@@ -43,5 +56,27 @@ export class FolderViewItemComponent implements OnInit {
   }
   newNote() {
 
+  }
+
+  renameFolder() {
+    var name = prompt("New name:", this.folderName ?? "Undefined");
+    if (name && name != "") {
+      this.api.renameFolder(this.folderID, name).subscribe(()=> {
+        this.g.pushToast("success", "Renamed: " + name);
+        this.loadFolder();
+      })
+    }
+  }
+
+  deleteFolder() {
+    var name = confirm("Really Delete?");
+    if (name) {
+      this.g.pushToast("info", "Deleting: " + name);
+      this.api.deleteFolder(this.folderID).subscribe(()=> {
+        this.g.pushToast("success", "Deleted: " + name);
+        this.fullReload.emit();
+        this.deleted = true;
+      })
+    }
   }
 }

@@ -1,8 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { ErrorResponse, FolderResponse, InfoResponse, LoginResponse, RegistrationResponse } from './api';
 import { GlobalService } from './global.service';
+import { Observable, of, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -13,9 +15,13 @@ export class ApiService {
 
   mainLoading = false;
 
-  handleError(response:HttpErrorResponse) {
+  handleError(response:any):Observable<any> {
+    console.dir(response);
     console.error(response.statusText + " ("+ response.message + ")")
-    this.g.pushToast("error",response.statusText);
+    this.g.pushToast("error", "(" +response.status + ") " + response.statusText);
+
+    const err = new Error("Error ("+ response.status +"): " + response.message);
+    return throwError(() => err);
   }
 
   Url(...path:string[]) {
@@ -95,6 +101,7 @@ export class ApiService {
         email: email,
       })
 
+
       request.subscribe({
         next: (response) => {
           this.mainLoading =false;
@@ -127,6 +134,9 @@ export class ApiService {
       }
     })
 
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+
     return request;
 
   }
@@ -139,6 +149,35 @@ export class ApiService {
         "Authorization": "Bearer " + this.token
       }
     })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+
+    return request;
+  }
+
+  renameFolder(parentId:number, name:string) {
+    this.g.pushToast("info", "Renaming: " + name);
+    let request = this.http.post<FolderResponse>(this.Url("folders",parentId.toString(), "rename"),{name},{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+
+    return request;
+  }
+
+  deleteFolder(id:number) {
+    let request = this.http.delete<FolderResponse>(this.Url("folders",id.toString(), "delete"),{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
 
     return request;
   }

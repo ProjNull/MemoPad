@@ -10,7 +10,12 @@
     <div class="drawer-side">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
         <ul class="menu bg-base-200 w-56 h-screen">
-            <app-folder-view-item [folder-id]="-1"></app-folder-view-item>
+            <ul class="menu w-full">
+                <app-folder-view-item [open]="true" [folder-id]="-1"></app-folder-view-item>
+            </ul>
         </ul>
     </div>
 </div>
+
+
+
