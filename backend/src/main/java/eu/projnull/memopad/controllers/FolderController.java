@@ -8,6 +8,7 @@ import eu.projnull.memopad.controllers.dto.FolderNameUpdate;
 import eu.projnull.memopad.controllers.dto.FolderResponse;
 import eu.projnull.memopad.controllers.dto.NoteResponse;
 import eu.projnull.memopad.models.Folder;
+import eu.projnull.memopad.models.Note;
 import eu.projnull.memopad.models.User;
 import eu.projnull.memopad.services.FolderService;
 import eu.projnull.memopad.services.NoteService;
@@ -43,7 +44,8 @@ public class FolderController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getRootFolder(userId);
-        return new FolderResponse(folder);
+        List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+        return new FolderResponse(folder, notes);
     }
 
     /**
@@ -59,7 +61,8 @@ public class FolderController {
         long userId = user.getId();
         try {
             Folder folder = folderService.getFolder(userId, id);
-            return new FolderResponse(folder);
+            List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+            return new FolderResponse(folder, notes);
         } catch (IllegalArgumentException e) {
             return null;
         }
@@ -79,7 +82,8 @@ public class FolderController {
         String name = folderCreate.getName();
         Folder parentFolder = folderService.getFolder(userId, id);
         Folder folder = folderService.createFolder(userId, name, parentFolder);
-        return new FolderResponse(folder);
+        List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+        return new FolderResponse(folder, notes);
     }
 
     /**
@@ -112,7 +116,8 @@ public class FolderController {
         String newName = folderNameUpdate.getName();
         Folder folder = folderService.getFolder(userId, id);
         Folder renamedFolder = folderService.renameFolder(userId, folder, newName);
-        return new FolderResponse(renamedFolder);
+        List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+        return new FolderResponse(renamedFolder, notes);
     }
 
     /**
@@ -129,7 +134,8 @@ public class FolderController {
         Folder folder = folderService.getFolder(userId, id);
         Folder parentFolder = folderService.getFolder(userId, parentId);
         folderService.moveFolder(userId, folder, parentFolder);
-        return new FolderResponse(folder);
+        List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+        return new FolderResponse(folder, notes);
     }
 
     /**
@@ -157,7 +163,10 @@ public class FolderController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
-        return folder.getSubFolders().stream().map(FolderResponse::new).toList();
+        return folder.getSubFolders().stream().map(f -> {
+            List<Long> notes = noteService.getNotesInFolder(userId, f).stream().map(Note::getId).toList();
+            return new FolderResponse(f, notes);
+        }).toList();
     }
 
 }
