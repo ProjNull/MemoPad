@@ -24,5 +24,31 @@ export type FolderResponse = {
     name: string,
     parentId: number | null,
     ownerId: number,
+    subFolderIds: number[],
+    noteIds: number[]
+}
+
+export type NoteResponse = {
+    id: number,
+    title: string,
+    content: string,
+    folderId: number,
+    ownerId: number
+}
+
+export type FolderFilesResponse = {
+    id: number,
+    name: string,
+    parentId: number | null,
+    ownerId: number,
     subFolderIds: number[]
+}
+
+export type FolderData = {
+    id: number,
+    name: string,
+    parentId: number | null,
+    ownerId: number,
+    subfolders: number[],
+    notes: number[]
 }

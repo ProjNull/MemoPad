@@ -9,6 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { FolderViewItemComponent } from './components/folder-view-item/folder-view-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { NoteViewItemComponent } from './components/note-view-item/note-view-item.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    FolderViewItemComponent
+    FolderViewItemComponent,
+    NoteViewItemComponent
   ],
   imports: [
     BrowserModule,

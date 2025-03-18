@@ -18,6 +18,7 @@ export class FolderViewItemComponent implements OnInit {
   deleted = false;
   show = model(false);
 
+  notesIDs:number[] = [];
 
   constructor(private api:ApiService, private g:GlobalService) {};
 
@@ -25,9 +26,13 @@ export class FolderViewItemComponent implements OnInit {
   childIds:number[] = []
   ngOnInit(): void {
     this.loadFolder();
-    if (this.openByDefault) {
+    if (this.openByDefault || this.g.getFolderState(this.folderID)) {
       this.show.set(true);
     }
+
+    this.show.subscribe((val)=>{
+      this.g.setFolderState(this.folderID, val);
+    })
   }
 
   doFullReload() {
@@ -42,20 +47,23 @@ export class FolderViewItemComponent implements OnInit {
       this.folderName = resp.name;
       this.folderID = resp.id;
       this.childIds = resp.subFolderIds;
+      this.notesIDs = resp.noteIds;
     })
   }
 
   newFolder() {
     var name = prompt("Folder name:")
+    this.g.setFolderState(this.folderID, true);
+    this.show.set(true);
     if (name && name != "") {
-      this.api.newFolder(this.folderID, name).subscribe(()=> {
+      this.api.newFolder(this.folderID, name).subscribe((newFolder)=> {
         this.g.pushToast("success", "Created: " + name);
         this.loadFolder();
       })
     }
   }
   newNote() {
-
+    this.loadFolder();
   }
 
   renameFolder() {

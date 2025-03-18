@@ -1,0 +1,10 @@
+
+
+.folder-btn {
+    @apply opacity-0 transition-opacity;
+}
+
+.folder > div:focus-within > .folder-btn,
+.folder:hover > div > .folder-btn {
+    @apply opacity-100;
+}

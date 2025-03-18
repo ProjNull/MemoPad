@@ -2,7 +2,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError } from 'rxjs/operators';
 import { environment } from '../environments/environment';
-import { ErrorResponse, FolderResponse, InfoResponse, LoginResponse, RegistrationResponse } from './api';
+import { ErrorResponse, FolderFilesResponse, FolderResponse, InfoResponse, LoginResponse, NoteResponse, RegistrationResponse } from './api';
 import { GlobalService } from './global.service';
 import { Observable, of, throwError } from 'rxjs';
 
@@ -131,8 +131,50 @@ export class ApiService {
 
 
     return request;
+  }
+
+  getNote(id:number) {
+    
+
+    if (id <= 0) {
+      return null;
+    }
+
+    var url = this.Url("notes", id.toString());
+
+    let request = this.http.get<NoteResponse>(url,{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+
+    return request;
+  }
+
+  getFolderFiles(id:number) {
+    
+    var url = this.Url("folders", "files");
+
+    if (id >= 0) {
+      url = this.Url("folders", id.toString(), "files");
+    }
+
+    let request = this.http.get<FolderFilesResponse>(url,{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+
+    return request;
 
   }
+
 
   logout() {
     this.token = null;
@@ -162,7 +204,6 @@ export class ApiService {
     })
 
     request = request.pipe(catchError((val) => this.handleError(val)))
-
 
     return request;
   }

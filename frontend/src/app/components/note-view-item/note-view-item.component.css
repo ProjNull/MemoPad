@@ -1,0 +1,9 @@
+.note-btn {
+    @apply opacity-0 transition-opacity;
+}
+
+.note > div:focus-within > .note-btn,
+.note:hover > div > .note-btn {
+    
+    @apply opacity-100;
+}
