@@ -5,7 +5,7 @@
             <form [formGroup]="registerForm" class="flex flex-col gap-1" (submit)="register()">
                 <input type="text" formControlName="username" placeholder="Username" class="input" />
                 <input type="password" formControlName="password" placeholder="Password" class="input" />
-                <input type="email" formControlName="email" placeholder="Rmail" class="input" />
+                <input type="email" formControlName="email" placeholder="Email" class="input" />
                 <div class="card-actions flex-col">
                     <button class="btn w-full btn-primary">Register</button>
                     <button type="button" class="btn w-full btn-secondary btn-outline" (click)="global.go('/auth/login')">Login</button>
