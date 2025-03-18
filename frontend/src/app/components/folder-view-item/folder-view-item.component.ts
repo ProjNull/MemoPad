@@ -63,7 +63,15 @@ export class FolderViewItemComponent implements OnInit {
     }
   }
   newNote() {
-    this.loadFolder();
+    var name = prompt("Note name:")
+    this.g.setFolderState(this.folderID, true);
+    this.show.set(true);
+    if (name && name != "") {
+      this.api.newNote(this.folderID, name).subscribe((newFolder)=> {
+        this.g.pushToast("success", "Created: " + name);
+        this.loadFolder();
+      })
+    }
   }
 
   renameFolder() {

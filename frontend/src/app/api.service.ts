@@ -195,6 +195,23 @@ export class ApiService {
     return request;
   }
 
+  newNote(parentId:number, name:string) {
+    this.g.pushToast("info", "Creating: " + name);
+    let request = this.http.post<FolderResponse>(this.Url("notes", "create"),{
+        folderId: parentId,
+        name
+      },{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+
+    return request;
+  }
+
   renameFolder(parentId:number, name:string) {
     this.g.pushToast("info", "Renaming: " + name);
     let request = this.http.post<FolderResponse>(this.Url("folders",parentId.toString(), "rename"),{name},{
