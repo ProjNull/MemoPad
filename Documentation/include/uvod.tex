@@ -1,11 +1,40 @@
 \section{Úvod}
 
-Každý student si během studia píše poznámky, ať už z přednášek, cvičení nebo vlastních myšlenek. Problém však nastává ve chvíli, kdy si je chce sdílet nebo doplnit od spolužáků. Každý totiž používá jiný nástroj a formát -- někdo preferuje jednoduchý plaintext, jiný používá Markdown, další spoléhá na LaTeX a někteří si vše zaznamenávají v textových dokumentech jako Microsoft Word. Tato rozmanitost formátů však komplikuje vzájemnou spolupráci a často vede ke ztrátě formátování nebo složité konverzi mezi různými systémy.
+Každý student si během studia píše poznámky, ať už z hodin, nebo z cvičení.
+Problém však nastává ve chvíli, když je chce sdílet nebo doplnit od spolužáků.
+Každý totiž používá jiný nástroj, a většinou i formát. Někdo preferuje
+jednoduchý plaintext, jiný používá Markdown, další spoléhá na LaTeX a někteří
+si vše zaznamenávají v tradičních textových dokumentech jako Microsoft Word.
+Tato rozmanitost formátů však komplikuje vzájemnou spolupráci a často vede ke
+ztrátě formátování nebo složité konverzi mezi různými formáty.
 
-Tento problém nás přivedl k myšlence vytvořit vlastní webovou aplikaci MemoPad, která by umožnila snadné psaní, správu a sdílení poznámek v univerzálním prostředí. Hlavním cílem bylo vytvořit jednoduchý, přehledný a efektivní nástroj, který by eliminoval potíže s konverzí formátů a zajistil bezproblémovou synchronizaci mezi zařízeními. Zároveň jsme tuto práci vnímali jako výzvu -- chtěli jsme zjistit, zda dokážeme navrhnout a implementovat aplikaci, která by se mohla stát praktickým řešením tohoto problému.
+Tento problém nás přivedl k myšlence vytvořit vlastní webovou aplikaci MemoPad,
+která by umožnila snadné psaní, ukládání, správu a sdílení poznámek v
+univerzálním prostředí. Hlavním cílem bylo vytvořit jednoduchý, přehledný a
+efektivní nástroj, který by eliminoval potíže s konverzí formátů a zajistil
+bezproblémovou synchronizaci mezi zařízeními. Zároveň jsme tuto práci vnímali
+jako výzvu, chtěli jsme zjistit, zda dokážeme navrhnout a implementovat
+aplikaci, která by se mohla stát praktickým řešením tohoto problému.
 
-Při návrhu jsme se inspirovali moderními webovými aplikacemi a rozhodli jsme se využít koncept Single Page Application (SPA) pro plynulé a rychlé uživatelské prostředí. Plánujeme také automatickou synchronizaci s cloudovým úložištěm a potenciální podporu exportu do různých formátů, aby si uživatelé mohli své poznámky snadno přizpůsobit vlastním potřebám.
+Při návrhu jsme se inspirovali moderními webovými aplikacemi, jako notesnook,
+nebo Overleaf, a rozhodli jsme se využít koncept Single Page Application (SPA)
+pro plynulé a rychlé uživatelské prostředí. Plánujeme také automatickou
+synchronizaci s cloudovým úložištěm a potenciální podporu exportu do různých
+formátů, aby si uživatelé mohli své poznámky snadno přizpůsobit vlastním
+potřebám.
 
-Práce se skládá z několika hlavních částí. Nejprve provedeme analýzu existujících řešení a identifikujeme jejich silné a slabé stránky. Následně se zaměříme na návrh a implementaci aplikace, kde podrobně popíšeme použitou technologii jak na straně serveru (backend -- část aplikace, která běží na serveru a stará se o zpracování dat), tak na straně uživatelského rozhraní (frontend -- část aplikace, se kterou komunikuje uživatel). Poté se budeme věnovat testování funkčnosti aplikace a ověříme, že splňuje stanovené požadavky. Nakonec připravíme uživatelskou příručku, která popíše, jak aplikaci používat, a shrneme dosažené výsledky v závěru.
+Práce se skládá z několika hlavních částí. Nejprve provedeme analýzu
+existujících řešení a identifikujeme jejich silné a slabé stránky. Následně se
+zaměříme na návrh a implementaci aplikace, kde podrobně popíšeme použitou
+technologii jak na straně serveru (backend -- část aplikace, která běží na
+serveru a stará se o zpracování dat), tak na straně uživatelského rozhraní
+(frontend -- část aplikace, se kterou komunikuje uživatel). Poté se budeme
+věnovat testování funkčnosti aplikace a ověříme, že splňuje stanovené
+požadavky. Nakonec připravíme uživatelskou příručku, která popíše, jak aplikaci
+používat, a shrneme dosažené výsledky v závěru.
+% btw ty pojmy backend a frontend jsem vysvětlil tady, tak už je dál vysvětlovat nebudu.
 
-Tato práce nejen poskytuje ucelený pohled na vývoj webové aplikace pro poznámky, ale také otevírá možnosti jejího budoucího rozšíření o další funkce, jako je podpora formátování textu, spolupráce více uživatelů nebo integrace s dalšími cloudovými službami.
+Tato práce, aneb dokumentace, poskytuje nejen ucelený pohled na vývoj webové
+aplikace pro poznámky, ale také rozvíjí možnosti jejího budoucího rozšíření o
+další funkce, jako je podpora formátování textu, spolupráce více uživatelů nebo
+exportování pro využití mimo prostředí aplikace.
