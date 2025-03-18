@@ -60,7 +60,7 @@ public class NoteController {
      *         does not belong to the user
      */
     @GetMapping("/{id}")
-    public NoteResponse get(@PathVariable Long id) {
+    public NoteResponse get(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         return new NoteResponse(noteService.getNote(userId, id));
@@ -74,7 +74,7 @@ public class NoteController {
      * @return the moved note
      */
     @PostMapping("/{id}/move")
-    public NoteResponse moveNote(@PathVariable Long id, @RequestBody NoteFolderUpdate noteFolderUpdate) {
+    public NoteResponse moveNote(@PathVariable(value = "id") Long id, @RequestBody NoteFolderUpdate noteFolderUpdate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         long folderId = noteFolderUpdate.getFolderId();
@@ -94,7 +94,7 @@ public class NoteController {
      */
 
     @PostMapping("/{id}/rename")
-    public NoteResponse renameNote(@PathVariable Long id, @RequestBody NoteNameUpdate noteNameUpdate) {
+    public NoteResponse renameNote(@PathVariable(value = "id") Long id, @RequestBody NoteNameUpdate noteNameUpdate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         String newName = noteNameUpdate.getName();
@@ -110,7 +110,7 @@ public class NoteController {
      * @return "deleted"
      */
     @DeleteMapping("/{id}/delete")
-    public String deleteNote(@PathVariable Long id) {
+    public String deleteNote(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Note note = noteService.getNote(userId, id);
@@ -126,7 +126,7 @@ public class NoteController {
      * @return the updated note response
      */
     @PostMapping("/{id}/content")
-    public NoteResponse updateContent(@PathVariable Long id, @RequestBody NoteContentUpdate noteContentUpdate) {
+    public NoteResponse updateContent(@PathVariable(value = "id") Long id, @RequestBody NoteContentUpdate noteContentUpdate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         String content = noteContentUpdate.getContent();
