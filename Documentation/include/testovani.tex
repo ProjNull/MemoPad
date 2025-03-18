@@ -1,1 +1,11 @@
 \section{Testování}
+
+Testovali jsme jednotlivé funkce během implementace. Po dokončení každé části
+backendu jsme pomocí REST klienta ověřili všechny endpointy. Po implementaci
+odpovídajících funkcí na frontendu jsme ladili kontrakty mezi frontendem a
+backendem a poté znovu ověřili celkovou funkčnost.
+
+Některé prvky na frontendu mají vlastní unit testy napsané v Angularu. Na
+backendu má jednotkové testy například JwtService, které jsou implementovány
+pomocí JUnit. Tento přístup nám umožnil identifikovat a opravit chyby v raných
+fázích vývoje a zajistit stabilitu aplikace před jejím nasazením.

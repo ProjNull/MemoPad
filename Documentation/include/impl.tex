@@ -1,39 +1,304 @@
 \section{Implementace}
 
 \iffalse
-1. Úvod do implementace
+    1. Úvod do implementace
 
-Krátké shrnutí, co bude tato část pokrývat.
+    Krátké shrnutí, co bude tato část pokrývat.
 
-2. Architektura aplikace
+    2. Architektura aplikace
 
-Celkový přehled: Popis architektury aplikace, jak backend a frontend spolupracují.
-Technologický stack: Seznam použitých technologií (Spring Boot, Angular, PostgreSQL, Elasticsearch).
+    Celkový přehled: Popis architektury aplikace, jak backend a frontend
+    spolupracují. Technologický stack: Seznam použitých technologií (Spring Boot,
+    Angular, PostgreSQL, Elasticsearch).
 
-3. Backend implementace
+    3. Backend implementace
 
-Spring Boot: Popis, jak je Spring Boot využit pro vývoj backendu.
-API rozhraní: Klíčové endpointy a jejich funkce.
-Zabezpečení: Jak je implementováno zabezpečení pomocí Spring Security a JWT tokenů.
-Databázová vrstva: Jak je implementována komunikace s PostgreSQL a jak je zajištěno hashování hesel pomocí BCryptu.
+    Spring Boot: Popis, jak je Spring Boot využit pro vývoj backendu. API rozhraní:
+    Klíčové endpointy a jejich funkce. Zabezpečení: Jak je implementováno
+    zabezpečení pomocí Spring Security a JWT tokenů. Databázová vrstva: Jak je
+    implementována komunikace s PostgreSQL a jak je zajištěno hashování hesel
+    pomocí BCryptu.
 
-4. Frontend implementace
+    4. Frontend implementace
 
-Angular: Popis, jak je Angular využit pro vývoj frontendu.
-Propojení s backendem: Jak frontend komunikuje s backendem a jak je zajištěno, že SPA je správně integrována do statického adresáře jar souboru.
+    Angular: Popis, jak je Angular využit pro vývoj frontendu. Propojení s
+    backendem: Jak frontend komunikuje s backendem a jak je zajištěno, že SPA je
+    správně integrována do statického adresáře jar souboru.
 
-5. Fuzzy-search s Elasticsearch
+    5. Fuzzy-search s Elasticsearch
 
-Teoretická Implementace Elasticsearch: Jak je Elasticsearch integrován do aplikace a jak funguje fuzzy-search vyhledávání.
-Popř pokud ho už máme, tak příklady dotazů: Ukázky dotazů, které využívají fuzzy-search.
+    Teoretická Implementace Elasticsearch: Jak je Elasticsearch integrován do
+    aplikace a jak funguje fuzzy-search vyhledávání. Popř pokud ho už máme, tak
+    příklady dotazů: Ukázky dotazů, které využívají fuzzy-search.
 
-6. Zajímavé části kódu / Detaily implementace
+    6. Zajímavé části kódu / Detaily implementace
 
-Algoritmy: Příklady klíčových částí kódu, které ilustrují důležité algoritmy nebo logiku aplikace.
-Zvlášť povedené implementace: Další části kódu, které by mohly být inspirativní nebo zajímavé.
+    Algoritmy: Příklady klíčových částí kódu, které ilustrují důležité algoritmy
+    nebo logiku aplikace. Zvlášť povedené implementace: Další části kódu, které by
+    mohly být inspirativní nebo zajímavé.
 
-7. Závěr
+    7. Závěr
 
-Shrnutí hlavních bodů implementace a případné úvahy o budoucím vývoji nebo vylepšeních.
+    Shrnutí hlavních bodů implementace a případné úvahy o budoucím vývoji nebo
+    vylepšeních.
 
 \fi
+
+\subsection{Architektura aplikace}
+
+Naše aplikace je rozdělena na backend a frontend projekty.
+
+Backend je implementován jako Gradle Spring Boot aplikace v Javě 21. Tento
+framework jsme zvolili, protože jsme potřebovali rychle implementovat
+přihlašování a registraci, abychom se mohli soustředit na složitější funkce.
+
+Frontend je implementován jako pnpm Angular aplikace v TypeScriptu. Angular
+jsme zvolili, protože to je frontend framework, s kterým jsme za posledních pár
+projektů nasbírali nejvíce zkušeností, a jeho OOP architektura nám umožnila
+reagovat na náhle změny implementace na backendu.
+
+Tyto dvě části spolu komunikují tak, že frontend posílá žádosti na adresu, ze
+které byl načtený, a to na routy začínající /api/. Backend zpracovává tyto
+žádosti a vrací odpovědi. Pokud backend obdrží žádost, která nezačíná na /api
+nebo /static, vrátí vždy index.html, čímž umožní správnou funkčnost SPA.
+
+Pro databázi využíváme PostgreSQL. Kromě toho jsme přidali Elasticsearch, který
+umožňuje pokročilé vyhledávání nejen podle obsahu, ale také fuzzy search a
+potenciálně i vyhledávání podle významu textu. Ačkoliv jsme prakticky
+Elasticsearch nestihli implementovat, nadstavbu pro něj máme připravenou.
+
+V následujících pod-kapitolách detailně rozebereme implementaci backendu,
+frontendu, teoretickou implementaci fuzzy search a konkrétní implementace
+specifických nebo žláštně implementovaných funkcí. % Tahle věta je trochu divná.
+
+\subsection{Implementace backendu}
+
+Backend využívá Spring Boot a následující projekty:
+
+\begin{itemize}
+    \item Spring Data JPA pro práci s databází.
+    \item Spring Web pro implementaci REST API.
+    \item Spring Security pro autentizaci a autorizaci.
+    \item Spring Actuator pro monitoring a správu aplikace.
+    \item JJWT pro práci s JWT tokeny.
+    \item Flyway pro migrace databáze.
+\end{itemize}
+
+Struktura backendového projektu se dělí podle stereotypu komponent:
+
+\begin{itemize}
+    \item eu.projnull.memopad.config -- Spring Beany a jejich konfigurace.
+    \item eu.projnull.memopad.controllers -- REST controllery.
+    \item eu.projnull.memopad.controllers.dto -- DTO objekty pro JSON odpovědi API.
+    \item eu.projnull.memopad.models -- Jakarta entity.
+    \item eu.projnull.memopad.repositories -- Spring Data JPA repozitáře.
+    \item eu.projnull.memopad.security -- Výjimka oproti ostatním balíčkům - zde se
+          nachází obecné komponenty pro vlastní chování Spring Security.
+    \item eu.projnull.memopad.services -- aplikační logika.
+\end{itemize}
+
+Backendové API zahrnuje následující nechráněné endpointy:
+
+\begin{itemize}
+    \item {\color{green} POST}/api/auth/login - Přijme uživatelské jméno a heslo a vrátí token
+    \item {\color{green} POST}/api/auth/register - Přijme uživatelské jméno, email a heslo a vrátí token
+\end{itemize}
+
+Dále všechny následující endpointy vyžadují autorizaci:
+
+\begin{itemize}
+    \item {\color{blue} GET} /api/auth/info - Vrátí informace o uživateli
+    \item {\color{blue} GET} /api/folders/ - Vrátí hlavní složku uživatele
+    \item {\color{blue} GET} /api/folders/\{id\} - Vrátí určenou složku
+    \item {\color{green} POST} /api/folders/\{id\}/create - Vytvoří v dané složce podsložku
+    \item {\color{green} POST} /api/folders/\{id\}/rename - Přejmenuje danou složku
+    \item {\color{green} POST} /api/folders/\{id\}/move/\{idParent\} - Přesune danou složku id do jiné
+          složky idParent
+    \item {\color{red} DELETE} /api/folders/\{id\}/delete - Smaže danou složku
+    \item {\color{blue} GET} /api/folders/\{id\}/files - Vrátí všechny poznámky ve složce
+    \item {\color{blue} GET} /api/folders/\{id\}/folders - Vrátí všechny podsložky ve složce
+    \item {\color{green} POST} /api/notes/create - Vytvoří novou poznámku v určené složce (request body)
+    \item {\color{blue} GET} /api/notes/\{id\} - Vrátí obsah a informace o dané poznámce
+    \item {\color{green} POST} /api/notes/\{id\}/move - Přesune poznámku do jiné dané složky (request
+          body)
+    \item {\color{green} POST} /api/notes/\{id\}/rename - Přejmenuje danou poznámku
+    \item {\color{red} DELETE} /api/notes/\{id\} - Smaže danou poznámku
+    \item {\color{green} POST} /api/notes/\{id\}/content - Aktualizuje obsah poznámky
+\end{itemize}
+
+Autorizace probíhá pomocí JWT tokenů předávaných v hlavičce Authorization.
+Bezpečnost zajišťuje Spring Security s filtrováním požadavků a hashováním hesel
+pomocí BCrypt. Databázová vrstva využívá Spring Data JPA pro práci s
+PostgreSQL.
+
+\subsection{Implementace frontendu}
+
+Frontend aplikace je postaven na Angularu, přičemž pro správu balíčků využíváme
+pnpm. Během vývoje používáme speciální konfiguraci ng-cli (konkrétně Vite) pro
+přesměrování požadavků začínajících /api na localhost:8080, kde běží backend.
+
+V produkčním prostředí backend zachytává všechny požadavky na /api a obsluhuje
+je přímo, zatímco ostatní cesty zůstávají zodpovědností frontendu.
+
+Statická SPA aplikace je po sestavení přesunuta do složky resources/static
+backendového projektu.
+
+Proces sestavení probíhá následovně:
+
+\begin{enumerate}
+    \item \textbf{pnpm build} – vytvoří optimalizovanou verzi frontendové aplikace.
+    \item \textbf{gradle bootjar} – sestaví kompletní backendový JAR soubor včetně statického frontendu.
+\end{enumerate}
+
+Tím je zajištěno, že aplikace lze jednoduše spustit jako jeden spustitelný JAR
+soubor s integrovaným frontendem.
+
+Celé uživatelské rozhraní je samozřejmě responzivní a funguje tudíž jak na desktopu, tak i na mobilních zařízeních.
+
+\subsection{Fuzzy search pomocí Elasticsearch}
+
+Ačkoliv se v rámci 4-týdenního sprintu na implementaci vyhledávání nedostalo,
+nadstavba a teorie jejího provedení je připravená.
+
+Nezávyslá služba Search Index by průběžně synchronizovala záznamy z Postgresu
+do Elasticsearch, kde by také přidala vektory významu každého paragrafu nebo
+věty. (Konkrétně se jedná o implementaci pomocí knihovny \uv{Natural Language Processing Toolkit} pro python).
+
+Dále bychom hledání ze strany další mikroslužby řešili tím, že se
+
+\begin{enumerate}
+    \item Najdou nejlepší shody pro název souboru
+    \item Najdou nejlepší shody pro význam názvu souboru
+    \item Najdou nejlepší shody pro význam obsahu
+\end{enumerate}
+
+A výsledky se seřadí dle \% shody nezávysle na tom, v které kategorii se schoda nachází.
+
+\subsection{Detaily a zláštní implementace}
+
+Jedinou zvláštní implementací, která by stále za zmínění je jak řešíme
+identifikaci uživatele z tokenu.
+
+Tradičním způsobem, a způsobem, který očekává Spring Security, je že se v
+tokenu uloží uživatelské jméno uživatele, nic méně, náš backend se orientoval
+kolem ID uživatele, tudíž, dle následující segmentu je vidět, že namísto
+UserDetailsService všude využíváme konkrétní třídy
+eu.projnull.memopad.services.UserService.
+
+Toto se konkrétně děje ve třídách:
+
+1. SecurityConfig
+
+\begin{lstlisting}[language=Java]
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
+
+    private final JwtService jwtService;
+
+    private final UserRepository userRepository;
+
+    SecurityConfig(UserRepository userRepository, JwtService jwtService) {
+        this.userRepository = userRepository;
+        this.jwtService = jwtService;
+    }
+
+    @Bean
+    public UserService userService() {
+        return new UserService(userRepository, jwtService, passwordEncoder());
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return userService();
+    }
+
+    @Bean
+    public AuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+        authenticationProvider.setUserDetailsService(userDetailsService());
+        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        return authenticationProvider;
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public JwtAuthFilter jwtAuthFilter(UserService userService) {
+        return new JwtAuthFilter(userService);
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/auth/register", "/api/auth/login", "/static/**", "/{name:^(?!api).+}/**", "/").permitAll()
+                        .anyRequest().authenticated())
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+        return http.build();
+    }
+}
+\end{lstlisting}
+
+\null\newpage
+2. JwtFilter
+
+\begin{lstlisting}[language=Java]
+/*
+ * Credits to https://www.geeksforgeeks.org/spring-boot-3-0-jwt-authentication-with-spring-security-using-mysql-database/
+ * This is a modified version of the original code, which I wouldn't have had figured out by my self in a reasonable amount of time.
+ * Might revisit this in the future, but for the time being, this will do.
+ */
+@Component
+@Slf4j
+public class JwtAuthFilter extends OncePerRequestFilter {
+
+    // The proper way to do this is to inject the JWTService and UserDetailsService.
+    // Since our UserService and JWTService use a Long userId, instead of a
+    // username, we can't use a UserDetailsService here, so this is a workaround
+    // until I refactor at some point in the future.
+    private final UserService userService;
+
+    public JwtAuthFilter(UserService userService) {
+        this.userService = userService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        String authHeader = request.getHeader("Authorization");
+        String token = null;
+        User user = null;
+
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+            user = userService.fromJwtToken(token).orElse(null);
+        }
+
+        // check if the token is valid and set the user in the security context
+        if (user != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    user, null, user.getAuthorities());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+        filterChain.doFilter(request, response);
+    }
+}
+\end{lstlisting}
+
+V budoucnu kdy se tento přehlednutý detail opravý, toto jsou jediné dvě třídy,
+jejichž implementace se bude muset částečně změnit.

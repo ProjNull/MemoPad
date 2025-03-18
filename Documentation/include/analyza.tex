@@ -1,25 +1,52 @@
 \section{Analýza}
 
-V současné době existuje mnoho různých aplikací pro psaní poznámek, přičemž každá je zaměřena na jiný způsob práce s textem. Mezi nejpopulárnější aplikace, se kterými jsme se setkali, patří:
+V současné době existuje mnoho různých aplikací pro psaní poznámek, přičemž
+každá je zaměřena na jiný způsob práce s textem. Mezi nejpopulárnější aplikace,
+se kterými jsme se setkali, patří následující programy a stránky:
 
-Obsidian.md -- pokročilá aplikace pro psaní poznámek v Markdownu, zaměřená na propojení jednotlivých poznámek do sítě znalostí.
+\begin{itemize}
+	\item \textbf{Obsidian.md} -- pokročilá aplikace pro psaní poznámek v Markdownu, zaměřená na
+	      propojení jednotlivých poznámek do sítě znalostí.
+	\item \textbf{Overleaf} -- online editor zaměřený na vytváření dokumentů v LaTeXu, často
+	      používaný studenty technických oborů.
+	\item \textbf{Microsoft Word} -- tradiční textový procesor s širokými možnostmi formátování a
+	      bohatou funkcionalitou.
+	\item \textbf{Notesnook} -- bezpečná a šifrovaná aplikace podporující Markdown pro psaní
+	      poznámek.
+\end{itemize}
 
-Overleaf -- online editor zaměřený na vytváření dokumentů v LaTeXu, často používaný studenty technických oborů.
-
-Microsoft Word -- tradiční textový procesor s širokými možnostmi formátování a bohatou funkcionalitou.
-
-Notesnook -- bezpečná a šifrovaná aplikace podporující Markdown pro psaní poznámek.
-
-Hlavním problémem při práci s těmito nástroji je jejich nekompatibilita. Každá aplikace využívá jiný formát pro ukládání poznámek, což vede k potížím při sdílení a spolupráci mezi uživateli. Pokud chce například uživatel převést poznámku z Obsidian.md do Microsoft Wordu, může dojít ke ztrátě formátování nebo nekompatibilitě s určitou funkcionalitou. Uživatelé pak často volí dvě nepohodlné alternativy -- buď se dále pokouší poznámky konvertovat, což vede k častým chybám a ztrátě formátu textu, nebo je musí ručně přepisovat, což je časově náročné a zbytečně odvádí pozornost od samotného učení.
+Hlavním problémem při práci s těmito nástroji je jejich vzájemná
+nekompatibilita. Každá aplikace využívá jiný formát pro ukládání poznámek, což
+vede k potížím při sdílení a spolupráci mezi uživateli. Pokud chce například
+uživatel převést markdown soubor z Obsidian.md do Microsoft Wordu, může dojít
+ke ztrátě formátování nebo nekompatibilitě s určitou funkcionalitou. Uživatelé
+pak často volí dvě nepohodlné alternativy: Buď se dál pokouší poznámky
+konvertovat, což vede k častým chybám a ztrátě formátu textu, nebo je musí
+ručně přepisovat, což je časově náročné a zbytečně odvádí pozornost od
+samotného učení.
 
 Zvažovali jsme několik možných řešení tohoto problému:
 
 \begin{itemize}
-	\item Vytvoření konvertoru formátů -- Mohli jsme vytvořit nástroj, který by dokázal konvertovat různé formáty poznámek mezi sebou. Nicméně to by nebylo tak zajímavé jako vývoj celé fullstack aplikace pro poznámky. Navíc, většina konvertorů je podle nás uživatelsky nepřívětivá a často nefunguje dokonale.
-	
-	\item Desktopová aplikace s podporou různých formátů -- Další možností bylo vytvořit nativní aplikaci, která by umožňovala práci s různými formáty a jejich snadnou integraci. To znělo už přívětivěji, ale mělo to jednu zásadní nevýhodu -- většina uživatelů dnes pracuje na mobilních zařízeních. Vytvoření multiplatformní desktopové i mobilní aplikace by vyžadovalo značné úsilí.
-	
-	\item Webová aplikace s cloudovým úložištěm -- Nakonec jsme se rozhodli vytvořit webovou aplikaci, která poznámky ukládá přímo v cloudu a umožňuje přihlášení odkudkoliv s okamžitou synchronizací změn. Díky webovým technologiím bude možné v budoucnu snadno přidávat nové funkce, například podporu transpilace formátů, a to buď rozšířením REST API, nebo vytvořením specializované mikroslužby, na kterou bude frontend volat. Aby aplikace byla plynulá a interaktivní, rozhodli jsme se využít Single Page Application (SPA), což umožňuje okamžitou odezvu na změny bez nutnosti neustálého načítání stránky.
+	\item \textbf{Vytvoření konvertoru formátů} -- Mohli jsme vytvořit nástroj, který by dokázal
+	      konvertovat různé formáty poznámek mezi sebou. Nicméně to by nebylo tak
+	      zajímavé jako vývoj celé fullstack aplikace pro poznámky. Navíc, většina
+	      konvertorů je podle nás uživatelsky nepřívětivá a často nefunguje dokonale.
+
+	\item \textbf{Desktopová aplikace s podporou různých formátů} -- Další možností bylo vytvořit
+	      nativní aplikaci, která by umožňovala práci s různými formáty a jejich snadnou
+	      integraci. To znělo už přívětivěji, ale mělo to jednu zásadní nevýhodu --
+	      většina uživatelů dnes pracuje na mobilních zařízeních, a vytvoření
+	      multiplatformní desktopové i mobilní aplikace by vyžadovalo značné úsilí.
+
+	\item \textbf{Webová aplikace s cloudovým úložištěm} -- Nakonec jsme se rozhodli vytvořit
+	      webovou aplikaci, která poznámky ukládá přímo v cloudu a umožňuje přihlášení
+	      odkudkoliv s okamžitou synchronizací změn. Díky webovým technologiím bude možné
+	      v budoucnu snadno přidávat nové funkce, například podporu transpilace formátů,
+	      a to buď rozšířením REST API, nebo vytvořením specializované mikroslužby, na
+	      kterou by frontend mohl posílat žádosti. Aby aplikace byla plynulá a interaktivní, rozhodli
+	      jsme se využít Single Page Application (SPA), což umožňuje okamžitou odezvu na
+	      změny bez nutnosti neustálého načítání stránky.
 \end{itemize}
 
 \subsection{Rozdělení problému na podúlohy}
@@ -29,7 +56,7 @@ Naše zvolené řešení jsme rozdělili na několik nezávislých funkcí:
 \begin{minipage}[t]{0.45\textwidth}
 	\vfill
 	{\large{Backend:}}
-	
+
 	\begin{itemize}
 		\item Správa složek a podsložek
 		\item Správa poznámek, včetně obsahu a umístění ve složkách
@@ -43,7 +70,7 @@ Naše zvolené řešení jsme rozdělili na několik nezávislých funkcí:
 \begin{minipage}[t]{0.45\textwidth}
 	\vfill
 	{\large{Frontend:}}
-	
+
 	\begin{itemize}
 		\item Formy pro přihlášení a registraci (správa tokenu)
 		\item Panel pro správu a přehled složek (integrace s API složek)
