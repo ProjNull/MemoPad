@@ -23,20 +23,6 @@ services:
       interval: 10s
       timeout: 10s
   
-  # Init service (configures Infrastructure)
-  init-service:
-    image: curlimages/curl:latest
-    #container_name: init-service
-    restart: no
-    depends_on:
-      - connect
-      - elasticsearch
-      - postgres
-    entrypoint: ["/bin/sh", "-c", "sleep 15 && /scripts/infra-init.sh"]
-    volumes:
-      - ./scripts/infra-init.sh:/scripts/infra-init.sh
-
-
   # PostgreSQL Database
   postgres:
     image: postgres:latest
@@ -53,54 +39,8 @@ services:
       interval: 10s
       timeout: 10s
 
-  # Zookeeper for Kafka Coordination
-  zookeeper:
-    image: confluentinc/cp-zookeeper:latest
-    #container_name: zookeeper
-    restart: always
-    environment:
-      ZOOKEEPER_CLIENT_PORT: 2181
-    ports:
-      - "2181:2181"
-
-  # Kafka Broker
-  kafka:
-    image: confluentinc/cp-kafka:latest
-    #container_name: kafka
-    restart: always
-    depends_on:
-      - zookeeper
-    entrypoint: ["/bin/sh", "-c", "sleep 10 && /etc/confluent/docker/run"]
-    environment:
-      KAFKA_BROKER_ID: 1
-      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    ports:
-      - "9092:9092"
-    healthcheck:
-      test: ["CMD", "kafka-broker-api-versions", "--bootstrap-server", "kafka:9092"]
-      interval: 10s
-      retries: 5
-      start_period: 20s
-
-  # Kafka Connect with Debezium for Change Data Capture (CDC)
-  connect:
-    build: connect
-    #container_name: kafka-connect
-    restart: always
-    depends_on:
-      - kafka
-    environment:
-      BOOTSTRAP_SERVERS: kafka:9092
-      GROUP_ID: "1"
-      CONFIG_STORAGE_TOPIC: debezium_connect_configs
-      OFFSET_STORAGE_TOPIC: debezium_connect_offsets
-      STATUS_STORAGE_TOPIC: debezium_connect_status
-    ports:
-      - "8083:8083"
-
   # Elasticsearch for Fuzzy Searching
+  # Currently unused
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.4.3
     restart: always
