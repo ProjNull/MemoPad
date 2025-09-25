@@ -17,12 +17,12 @@ public class FlywayConfig {
                 String location;
 
                 if (driverName.contains("sqlite")) {
-                    location = "classpath:db/migrations/sqlite";
+                    location = "classpath:db/migration/sqlite";
                 } else if (driverName.contains("postgres")) {
-                    location = "classpath:db/migrations/postgres";
+                    location = "classpath:db/migration/postgres";
                 } else {
                     // fallback to postgres
-                    location = "classpath:db/migrations/postgres";
+                    location = "classpath:db/migration/postgres";
                 }
 
                 configuration.locations(location);
