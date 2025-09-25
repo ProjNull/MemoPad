@@ -1,5 +1,5 @@
 CREATE TABLE folder (
-    id NUMBER PRIMARY KEY AUTOINCREMENT,
+    id NUMBER PRIMARY KEY,
     parent_id INTEGER,
     owner_id INTEGER NOT NULL,
     name VARCHAR(255) NOT NULL,
