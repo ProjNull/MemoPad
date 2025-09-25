@@ -33,9 +33,9 @@ public class NoteService {
         return noteRepository.save(note);
     }
 
-    public Note moveNote(long ownerId, Note note, Folder newFolder) {
+    public void moveNote(long ownerId, Note note, Folder newFolder) {
         note.setFolder(newFolder);
-        return noteRepository.save(note);
+        noteRepository.save(note);
     }
 
     public @Nullable Note getNote(long ownerId, long noteId) {
@@ -49,5 +49,9 @@ public class NoteService {
 
     public List<Note> getNotesInFolder(long ownerId, Folder folder) {
         return noteRepository.findByFolder(folder);
+    }
+
+    public void deleteNotesInFolder(long ownerId, Folder folder) {
+        noteRepository.deleteByFolder(folder);
     }
 }

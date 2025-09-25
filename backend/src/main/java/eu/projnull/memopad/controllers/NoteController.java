@@ -1,13 +1,9 @@
 package eu.projnull.memopad.controllers;
 
+import eu.projnull.memopad.controllers.dto.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import eu.projnull.memopad.controllers.dto.NoteContentUpdate;
-import eu.projnull.memopad.controllers.dto.NoteCreate;
-import eu.projnull.memopad.controllers.dto.NoteFolderUpdate;
-import eu.projnull.memopad.controllers.dto.NoteNameUpdate;
-import eu.projnull.memopad.controllers.dto.NoteResponse;
 import eu.projnull.memopad.models.Folder;
 import eu.projnull.memopad.models.Note;
 import eu.projnull.memopad.models.User;
@@ -110,12 +106,12 @@ public class NoteController {
      * @return "deleted"
      */
     @DeleteMapping("/{id}/delete")
-    public String deleteNote(@PathVariable(value = "id") Long id) {
+    public GenericMessageResponse deleteNote(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Note note = noteService.getNote(userId, id);
         noteService.deleteNote(userId, note);
-        return "deleted";
+        return new GenericMessageResponse("Note deleted");
     }
 
     /**

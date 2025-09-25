@@ -13,4 +13,5 @@ public interface NoteRepository extends Repository<Note, Long> {
     void delete(Note note);
     Optional<Note> findById(long id);
     List<Note> findByFolder(Folder folder);
+    void deleteByFolder(Folder folder);
 }

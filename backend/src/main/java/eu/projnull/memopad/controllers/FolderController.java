@@ -98,6 +98,9 @@ public class FolderController {
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
         folderService.deleteFolder(userId, folder);
+        // Delete all dependent notes
+        noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+        noteService.deleteNotesInFolder(userId, folder);
         return new FolderDeletedJson("Folder deleted.");
     }
 
