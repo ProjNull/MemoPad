@@ -53,8 +53,10 @@ export class FolderViewItemComponent implements OnInit {
     })
   }
 
-  newFolder() {
-    var name = prompt("Folder name:")
+  newFolder(name: string | null = null) {
+    if (name == null ){
+      var name = prompt("Folder name:")
+    }
     this.g.setFolderState(this.folderID, true);
     this.show.set(true);
     if (name && name != "") {
@@ -64,8 +66,10 @@ export class FolderViewItemComponent implements OnInit {
       })
     }
   }
-  newNote() {
-    var name = prompt("Note name:")
+  newNote(name: string | null = null) {
+    if (name == null ){
+      var name = prompt("Note name:")
+    }
     this.g.setFolderState(this.folderID, true);
     this.show.set(true);
     if (name && name != "") {
@@ -76,19 +80,26 @@ export class FolderViewItemComponent implements OnInit {
     }
   }
 
-  renameFolder() {
-    var name = prompt("New name:", this.folderName ?? "Undefined");
-    if (name && name != "") {
-      this.api.renameFolder(this.folderID, name).subscribe(()=> {
-        this.g.pushToast("success", "Renamed: " + name);
+  renameFolder(text:string | null = null) {
+
+    
+    if (text == null) {
+      text = prompt("Rename Note:", this.folderName ?? "");
+    }
+    if (text && text != "") {
+      this.api.renameFolder(this.folderID, text).subscribe(()=> {
+        this.g.pushToast("success", "Renamed: " + text);
         this.loadFolder();
       })
     }
   }
 
-  deleteFolder() {
-    var name = confirm("Really Delete?");
-    if (name) {
+  deleteFolder(skipAsk: boolean = false) {
+    var inpt = true;
+    if (!skipAsk) {
+      inpt =  confirm("Delete Folder?");
+    }
+    if (inpt) {
       this.g.pushToast("info", "Deleting: " + name);
       this.api.deleteFolder(this.folderID).subscribe(()=> {
         this.g.pushToast("success", "Deleted: " + name);

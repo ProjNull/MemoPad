@@ -10,12 +10,41 @@
         <div class="dropdown">
             <div tabindex="0" role="button" class="note-btn btn block btn-ghost rounded-full border-0 p-0 w-6 h-6 mr-2">:</div>
             <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
-                <li><a (click)="rename()">Rename Note</a></li>
-                <li><a (click)="delete()">Delete Note</a></li>
+                <li><a (click)="modRen.showModal()">Rename Note</a></li>
+                <li><a (click)="modDel.showModal()">Delete Note</a></li>
             </ul>
         </div>
+        
     </div>
+
 </li>
+<dialog #modRen class="modal">
+    <div class="modal-box w-60">
+        <h3 class="text-lg font-bold">Rename:</h3>
+        <input type="text" placeholder="New Name" [value]="noteName" class="input" #renameInput />
+        <div class="modal-action">
+        <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn btn-primary" (click)="rename(renameInput.value)">Rename</button>
+
+            <button class="btn">Close</button>
+        </form>
+        </div>
+    </div>
+</dialog>
+
+<dialog #modDel class="modal">
+    <div class="modal-box w-60">
+        <h3 class="text-lg font-bold">Delete Note?</h3>
+        <div class="modal-action">
+        <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn btn-primary" (click)="delete(true)">Yes</button>
+            <button class="btn">No</button>
+        </form>
+        </div>
+    </div>
+</dialog>
 } @else {
     <li class="text-center p-1"><span class="skeleton h-[1lh] p-1 rounded"></span></li>
 }

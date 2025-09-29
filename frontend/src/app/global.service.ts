@@ -10,6 +10,7 @@ type Toast = {
   shown: boolean
 }
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -22,6 +23,25 @@ export class GlobalService {
   public toasts:Array<Toast> = [];
 
   private selectedNoteID:number|null = null;
+
+  createDialog(content:HTMLElement, callback:()=>void) {
+    const dialog = document.createElement("dialog");
+
+    const modal = document.createElement("dialog");
+
+    document.body.append(dialog)
+    dialog.showModal();
+    dialog.addEventListener("close",()=> {
+      callback();
+      dialog.remove();
+    })
+  }
+
+  doRename(deftext:string, callback:()=>void) {
+    const renameForm = document.createElement("input");
+    renameForm.type = "text";
+    renameForm.value = deftext;
+  }
 
   setFolderState(id:number,open:boolean) {
     if (open) {

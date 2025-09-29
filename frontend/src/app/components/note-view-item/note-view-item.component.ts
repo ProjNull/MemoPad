@@ -31,19 +31,25 @@ export class NoteViewItemComponent implements OnInit {
     this.api.fetchNote(this.noteID);
   }
 
-  rename() {
-    const inpt = prompt("Rename Note:", this.noteName ?? "");
+  rename(text:string | null = null) {
 
-    if (inpt) {
-      this.api.renameNote(this.noteID,inpt).subscribe(()=> {
+    
+    if (text == null) {
+      text = prompt("Rename Note:", this.noteName ?? "");
+    }
+    if (text) {
+      this.api.renameNote(this.noteID,text).subscribe(()=> {
         this.g.pushToast("success", "Renamed: " + this.noteName);
         this.loadNote();
       });
     }
   }
 
-  delete() {
-    const inpt = confirm("Delete Note?");
+  delete(skipAsk: boolean = false) {
+    var inpt = true;
+    if (!skipAsk) {
+      inpt =  confirm("Delete Note?");
+    }
 
     if (inpt) {
       this.api.deleteNote(this.noteID).subscribe(()=> {
