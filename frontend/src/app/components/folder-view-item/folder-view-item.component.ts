@@ -13,6 +13,8 @@ export class FolderViewItemComponent implements OnInit {
   @Input("folder-id") folderID = -0;
   @Input("open") openByDefault = false;
 
+  @Input("is-root") isRoot = false;
+
   fullReload = output<void>();
 
   deleted = false;

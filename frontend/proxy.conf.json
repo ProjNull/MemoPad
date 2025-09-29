@@ -1,6 +1,6 @@
 {
     "/api/": {
-        "target": "http://10.147.18.120:8080/",
+        "target": "https://memopad.script.projnull.eu/",
         "secure": false
     }
 }

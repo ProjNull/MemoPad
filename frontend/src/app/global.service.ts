@@ -21,6 +21,8 @@ export class GlobalService {
 
   public toasts:Array<Toast> = [];
 
+  private selectedNoteID:number|null = null;
+
   setFolderState(id:number,open:boolean) {
     if (open) {
       if (this.openFolders.indexOf(id) == -1) {
@@ -49,6 +51,14 @@ export class GlobalService {
         return toast.id != toastID
       })
     },2000)
+  }
+
+  setOpenNote(noteID: number) {
+    this.selectedNoteID = noteID;
+  }
+
+  getOpenNote() {
+    return this.selectedNoteID;
   }
 
   go(path:string) {

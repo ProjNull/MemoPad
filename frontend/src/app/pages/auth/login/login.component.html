@@ -1,7 +1,8 @@
-<div class="w-screen h-screen flex justify-center items-center">
+<div class="w-screen h-screen flex justify-center items-center flex-col gap-1">
     <div class="card w-64 bg-base-200 card-xs shadow-sm">
         <div class="card-body">
             <h2 class="card-title">Login</h2>
+            
             <form [formGroup]="loginForm" class="flex flex-col gap-1" (submit)="login()">
                 <input type="text" formControlName="username" placeholder="Username" class="input" />
                 <input type="password" formControlName="password" placeholder="Password" class="input" />
@@ -10,6 +11,16 @@
                     <button type="button" class="btn w-full btn-secondary btn-outline" (click)="global.go('/auth/register')">Register</button>
                 </div>
             </form>
+        </div>
+    </div>
+    <div class="card w-64 bg-warning card-xs shadow-sm">
+        <div class="card-body">
+            <div class="text-center text-warning-content">
+                <span class="text-lg"><b>Pozor!</b><br></span>
+                Jedná se <b>Testovací Prostředí.</b><br>
+                Data mohou být smazána <u>kdykoliv</u>.<br>
+                <b><em>NEPOUŽÍVEJTE REÁLNÉ ÚDAJE!!</em></b>
+            </div>
         </div>
     </div>
 </div>

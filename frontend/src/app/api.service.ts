@@ -1,6 +1,6 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError } from 'rxjs/operators';
+import { catchError, subscribeOn } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { ErrorResponse, FolderFilesResponse, FolderResponse, InfoResponse, LoginResponse, NoteResponse, RegistrationResponse } from './api';
 import { GlobalService } from './global.service';
@@ -225,8 +225,33 @@ export class ApiService {
     return request;
   }
 
+  renameNote(noteID:number, name:string) {
+    this.g.pushToast("info", "Renaming: " + name);
+    let request = this.http.post<FolderResponse>(this.Url("notes",noteID.toString(), "rename"),{name},{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+    return request;
+  }
+
   deleteFolder(id:number) {
     let request = this.http.delete<FolderResponse>(this.Url("folders",id.toString(), "delete"),{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+    return request;
+  }
+
+  deleteNote(id:number) {
+    let request = this.http.delete<FolderResponse>(this.Url("notes",id.toString(), "delete"),{
       headers: {
         "Authorization": "Bearer " + this.token
       }

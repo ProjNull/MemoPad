@@ -19,7 +19,9 @@
                     <li><a (click)="newFolder()">New Folder</a></li>
                     <li><a (click)="newNote()">New Note</a></li>
                     <li><a (click)="renameFolder()">Rename Folder</a></li>
-                    <li><a (click)="deleteFolder()">Delete Folder</a></li>
+                    @if (!isRoot) {
+                        <li><a (click)="deleteFolder()">Delete Folder</a></li>
+                    }
                 </ul>
             </div>
         </div>
@@ -33,7 +35,7 @@
                 }
 
                 @for (note of notesIDs; track $index) {
-                    <app-note-view-item [note-id]="note"></app-note-view-item>
+                    <app-note-view-item (fullReload)="fullReload.emit()" [note-id]="note"></app-note-view-item>
                 }
             </ul>
         }
