@@ -1,4 +1,4 @@
-<div class="toast">
+<div class="toast z-[99999999]">
   @for(toast of g.toasts; track toast.id) {
     <div [class]="'alert alert-soft alert-'+ toast.type">
       @switch (toast.type) {
@@ -32,6 +32,7 @@
 <div class="loading-bar" [class.show]="api.isLoading()"></div>
 
 <router-outlet />
+
 
 
 

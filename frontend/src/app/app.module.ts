@@ -10,6 +10,7 @@ import { LoginComponent } from './pages/auth/login/login.component';
 import { FolderViewItemComponent } from './components/folder-view-item/folder-view-item.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoteViewItemComponent } from './components/note-view-item/note-view-item.component';
+import { MarkdownModule } from 'ngx-markdown';
 
 @NgModule({
   declarations: [
@@ -18,12 +19,15 @@ import { NoteViewItemComponent } from './components/note-view-item/note-view-ite
     LoginComponent,
     RegisterComponent,
     FolderViewItemComponent,
-    NoteViewItemComponent
+    NoteViewItemComponent,
+    
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    FormsModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [provideHttpClient()],
   bootstrap: [AppComponent]

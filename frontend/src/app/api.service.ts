@@ -23,7 +23,14 @@ export class ApiService {
 
   handleError(response:any):Observable<any> {
     console.dir(response);
-    console.error(response.statusText + " ("+ response.message + ")")
+    console.error(response.statusText + " ("+ response.message + ")");
+
+    console.dir(response)
+
+    if (response== 403) {
+
+    }
+
     this.g.pushToast("error", "(" +response.status + ") " + response.statusText);
 
     const err = new Error("Error ("+ response.status +"): " + response.message);
@@ -296,18 +303,21 @@ export class ApiService {
     return request;
   }
 
-  updateNote() {
-    return;
-    /*
-    let request = this.http.delete<FolderResponse>(this.Url("notes",id.toString(), "delete"),{
+  updateNoteContent(note:NoteResponse | null) {
+    if (note == null) return;
+
+    let request = this.http.post<NoteResponse>(this.Url("notes",note.id.toString(),"content"), {
+      content: note.content
+    },{
       headers: {
         "Authorization": "Bearer " + this.token
       }
     })
 
+
     request = request.pipe(catchError((val) => this.handleError(val)))
 
-    return request;*/
+    return request;
   }
 
   getNoteObserver() {

@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+.emptyNote {
+    @apply lg:hidden;
+}
+
+
+.disclaimer {
+    @apply text-center p-1 text-xs bg-amber-800;
+}

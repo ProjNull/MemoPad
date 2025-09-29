@@ -1,32 +1,62 @@
 
-<div class="drawer lg:drawer-open">
+<div class="drawer lg:drawer-open w-screen">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-content flex flex-col items-center justify-center">
+    <div class="drawer-content h-screen flex flex-col ">
       <!-- Page content here -->
-        <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
-        Open drawer
-        </label>
-
-       
-        
-
-        @if (note()) {
-            <div>
-                {{ note()?.title }}
+        <div class="navbar bg-base-300 shadow-sm flex justify-between " [class.emptyNote]="(note == null)">
+            <div class="flex gap-2 items-center">
+                <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18v-2h18v2zm0-5v-2h18v2zm0-5V6h18v2z"/></svg>
+                </label>
+                @if (note) {
+                    <h2 class="font-bold text-2xl">{{note.title}}{{isChanged ? " *" : ""}}</h2>
+                }
             </div>
+
+            @if (note) {
+                <div class="flex gap-2 items-center">
+                    <span>{{ editMode ? "Edit" : "Read" }}</span>
+                    <!-- EDIT TOGGLE -->
+                    <label class="toggle toggle-xl text-base-content">
+                        <input type="checkbox" [checked]="editMode"  (change)="toggleEditMode($event)"/>
+                        <svg aria-label="enabled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M5.45 16q-1.05 0-1.888-.675T2.5 13.6l-.725-3.35h-.1q-.425.05-.737-.225t-.363-.7t.238-.725t.712-.35q1.55-.125 2.7-.187T6.325 8q1.625 0 2.625.15t1.8.525q.35.175.663.25T12 9t.538-.075t.612-.225q.825-.375 1.9-.537T17.9 8q1.15 0 2.425.063t2.175.162q.425.05.7.35t.225.725t-.35.7t-.725.225h-.1l-.75 3.4q-.225 1.05-1.05 1.713T18.575 16H16.35q-1.05 0-1.85-.638t-1.05-1.637l-.675-2.675H11.25l-.675 2.675Q10.3 14.75 9.5 15.375T7.675 16zm-1-2.8q.075.35.35.575t.625.225H7.65q.35 0 .625-.213t.35-.537l.775-3.025q-.675-.125-1.525-.163t-1.55-.037q-.575 0-1.237.012T3.85 10.1zm10.925.05q.075.325.35.538t.625.212h2.225q.35 0 .625-.225t.35-.575l.65-3.125q-.5-.025-1.15-.037t-1.15-.013q-.75 0-1.662.038t-1.638.162z"/></svg>
+                        <svg aria-label="disabled" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21v-4.25L16.2 3.575q.3-.275.663-.425t.762-.15t.775.15t.65.45L20.425 5q.3.275.438.65T21 6.4q0 .4-.137.763t-.438.662L7.25 21zM17.6 7.8L19 6.4L17.6 5l-1.4 1.4z"/></svg>
+                    </label>
+                </div>
+            }
+        </div>
+        @if (note) {
+            @if (editMode) {
+                <div class="p-4 flex-grow">
+                    <textarea
+                        (keydown)="onEditBoxInput($event)"
+                        (input)="onEditBox($event)"
+                        [value]="note.content" class="w-full h-full box-border focus:outline-0 rounded-md bg-base-200 focus:bg-base-300 p-2 resize-none"
+                    ></textarea>
+                </div>
+            } @else {
+                <div class="md-content p-4 flex-grow overflow-y-auto">
+                    <markdown [data]="note.content">
+                    </markdown>
+                </div>
+            }
         } @else {
-            NO NOTE
+            <div class="w-full h-full flex flex-col justify-center items-center">
+                <span>Select Note</span>
+            </div>
         }
 
+        <div class="disclaimer">Do not share personal info!!</div>
         
     </div>
     <div class="drawer-side">
         <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
-        <ul class="menu bg-base-200 w-56 h-screen">
+        <ul class="menu bg-base-200 w-56 h-screen flex flex-col gap-2">
             <ul class="menu w-full">
                 <app-folder-view-item [open]="true" [folder-id]="-1" [is-root]="true"></app-folder-view-item>
             </ul>
             <div class="grow"></div>
+            <div class="disclaimer rounded"><b>Env: Testing</b></div>
             <button class="btn btn-outline btn-error" (click)="logout()">Logout</button>
         </ul>
     </div>
