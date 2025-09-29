@@ -28,7 +28,7 @@ export class NoteViewItemComponent implements OnInit {
   }
   
   select() {
-    this.g.setOpenNote(this.noteID);
+    this.api.fetchNote(this.noteID);
   }
 
   rename() {

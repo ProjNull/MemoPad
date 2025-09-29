@@ -1,10 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { catchError, subscribeOn } from 'rxjs/operators';
+import { Injectable, signal } from '@angular/core';
+import { catchError, finalize, subscribeOn, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { ErrorResponse, FolderFilesResponse, FolderResponse, InfoResponse, LoginResponse, NoteResponse, RegistrationResponse } from './api';
 import { GlobalService } from './global.service';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, of, Subject, Subscriber, Subscription, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,12 @@ export class ApiService {
 
   mainLoading = false;
 
+
+  processing = 0;
+
+
+  curentNoteOb = new Subject<NoteResponse | null>();
+
   handleError(response:any):Observable<any> {
     console.dir(response);
     console.error(response.statusText + " ("+ response.message + ")")
@@ -22,6 +28,7 @@ export class ApiService {
 
     const err = new Error("Error ("+ response.status +"): " + response.message);
     return throwError(() => err);
+
   }
 
   Url(...path:string[]) {
@@ -76,6 +83,7 @@ export class ApiService {
       })
 
       request = request.pipe(catchError((val) => this.handleError(val)))
+      request = request.pipe(finalize(() => {this.mainLoading = false}))
       request.subscribe((response) => {
           this.mainLoading =false;
           this.token = response.token;
@@ -99,8 +107,9 @@ export class ApiService {
       })
 
       request = request.pipe(catchError((val) => this.handleError(val)))
+      request = request.pipe(finalize(() => {this.mainLoading = false}))
       request.subscribe((response) => {
-          this.mainLoading =false;
+          this.mainLoading = false;
 
           this.token = response.token;
           localStorage.setItem("token",this.token);
@@ -127,8 +136,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
-
+    request = this.bindHandlers(request);
 
     return request;
   }
@@ -148,7 +156,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
 
     return request;
@@ -168,7 +176,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
 
     return request;
@@ -189,7 +197,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
 
     return request;
@@ -206,7 +214,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
 
     return request;
@@ -220,7 +228,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
     return request;
   }
@@ -233,8 +241,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
-
+    request = this.bindHandlers(request);
     return request;
   }
 
@@ -245,7 +252,7 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
     return request;
   }
@@ -257,11 +264,59 @@ export class ApiService {
       }
     })
 
-    request = request.pipe(catchError((val) => this.handleError(val)))
+    request = this.bindHandlers(request);
 
     return request;
   }
   
+  fetchNote(id:number) {
 
+
+    let request = this.http.get<NoteResponse>(this.Url("notes",id.toString()),{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = this.bindHandlers(request);
+
+    request.subscribe((data)=> {
+      this.curentNoteOb.next(data);
+    });
+  }
+
+  private bindHandlers(request: Observable<any>) {
+    request = request.pipe(
+      tap({
+        subscribe: () => { this.processing++;}
+      }),
+      catchError((val) => this.handleError(val)),
+      finalize(() => { this.processing--; })
+    );
+    return request;
+  }
+
+  updateNote() {
+    return;
+    /*
+    let request = this.http.delete<FolderResponse>(this.Url("notes",id.toString(), "delete"),{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = request.pipe(catchError((val) => this.handleError(val)))
+
+    return request;*/
+  }
+
+  getNoteObserver() {
+    return this.curentNoteOb;
+  }
+
+
+  isLoading() {
+    return this.processing > 0 || this.mainLoading;
+  }
 
 }

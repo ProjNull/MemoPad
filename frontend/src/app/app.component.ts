@@ -12,7 +12,7 @@ import { GlobalService } from './global.service';
 export class AppComponent implements OnInit {
   title = 'frontend';
 
-  constructor(private router:Router, private api:ApiService, public g:GlobalService) {}
+  constructor(private router:Router, public api:ApiService, public g:GlobalService) {}
 
   ngOnInit(): void {
     this.api.tryRecoverToken();

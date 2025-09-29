@@ -10,7 +10,7 @@ import { FormControl, FormGroup } from '@angular/forms';
   styleUrl: './register.component.css'
 })
 export class RegisterComponent {
-  constructor(public global:GlobalService, private api:ApiService) {}
+  constructor(public global:GlobalService, public api:ApiService) {}
 
 
   registerForm = new FormGroup({

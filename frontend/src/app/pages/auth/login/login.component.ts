@@ -11,7 +11,7 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(public global:GlobalService, private api:ApiService) {}
+  constructor(public global:GlobalService, public api:ApiService) {}
 
   loginForm = new FormGroup({
     username: new FormControl(''),

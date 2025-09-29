@@ -7,8 +7,8 @@
                 <input type="text" formControlName="username" placeholder="Username" class="input" />
                 <input type="password" formControlName="password" placeholder="Password" class="input" />
                 <div class="card-actions flex-col">
-                    <button class="btn w-full btn-primary">Login</button>
-                    <button type="button" class="btn w-full btn-secondary btn-outline" (click)="global.go('/auth/register')">Register</button>
+                    <button class="btn w-full btn-primary" [disabled]="api.isLoading()">Login</button>
+                    <button type="button" class="btn w-full btn-secondary btn-outline" (click)="global.go('/auth/register')" [disabled]="api.isLoading()">Register</button>
                 </div>
             </form>
         </div>
@@ -17,7 +17,7 @@
         <div class="card-body">
             <div class="text-center text-warning-content">
                 <span class="text-lg"><b>Pozor!</b><br></span>
-                Jedná se <b>Testovací Prostředí.</b><br>
+                Jedná se o <b>Testovací Prostředí.</b><br>
                 Data mohou být smazána <u>kdykoliv</u>.<br>
                 <b><em>NEPOUŽÍVEJTE REÁLNÉ ÚDAJE!!</em></b>
             </div>
