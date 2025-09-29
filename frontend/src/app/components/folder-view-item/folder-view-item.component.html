@@ -35,7 +35,7 @@
                 }
 
                 @for (note of notesIDs; track $index) {
-                    <app-note-view-item (fullReload)="fullReload.emit()" [note-id]="note"></app-note-view-item>
+                    <app-note-view-item (fullReload)="doFullReload()" [note-id]="note"></app-note-view-item>
                 }
             </ul>
         }

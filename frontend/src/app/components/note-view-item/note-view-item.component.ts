@@ -47,8 +47,8 @@ export class NoteViewItemComponent implements OnInit {
 
     if (inpt) {
       this.api.deleteNote(this.noteID).subscribe(()=> {
-        this.g.pushToast("success", "Deleted: " + this.noteName);
         this.fullReload.emit();
+        this.g.pushToast("success", "Deleted: " + this.noteName);
       });
     }
   }

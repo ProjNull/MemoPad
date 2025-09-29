@@ -20,6 +20,7 @@ export class ApiService {
 
 
   curentNoteOb = new Subject<NoteResponse | null>();
+  currentNoteId = -1;
 
   handleError(response:any):Observable<any> {
     console.dir(response);
@@ -265,6 +266,9 @@ export class ApiService {
   }
 
   deleteNote(id:number) {
+    if (this.currentNoteId == id) {
+      this.curentNoteOb.next(null);
+    }
     let request = this.http.delete<FolderResponse>(this.Url("notes",id.toString(), "delete"),{
       headers: {
         "Authorization": "Bearer " + this.token
@@ -289,6 +293,7 @@ export class ApiService {
 
     request.subscribe((data)=> {
       this.curentNoteOb.next(data);
+      this.currentNoteId = data.id
     });
   }
 

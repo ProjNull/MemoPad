@@ -5,5 +5,5 @@
 
 
 .md-content {
-    @apply prose;
+    @apply prose w-full max-w-none dark:prose-invert;
 }
