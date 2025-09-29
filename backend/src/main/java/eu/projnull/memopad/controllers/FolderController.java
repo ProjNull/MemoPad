@@ -1,12 +1,9 @@
 package eu.projnull.memopad.controllers;
 
+import eu.projnull.memopad.controllers.dto.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import eu.projnull.memopad.controllers.dto.FolderCreate;
-import eu.projnull.memopad.controllers.dto.FolderDeletedJson;
-import eu.projnull.memopad.controllers.dto.FolderNameUpdate;
-import eu.projnull.memopad.controllers.dto.FolderResponse;
-import eu.projnull.memopad.controllers.dto.NoteResponse;
 import eu.projnull.memopad.models.Folder;
 import eu.projnull.memopad.models.Note;
 import eu.projnull.memopad.models.User;
@@ -22,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/api/folders")
@@ -93,15 +91,16 @@ public class FolderController {
      * @return "deleted"
      */
     @DeleteMapping("/{id}/delete")
-    public FolderDeletedJson deleteFolder(@PathVariable(value = "id") Long id) {
+    public GenericMessageResponse deleteFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
+        if (folder.getId().equals(folderService.getRootFolder(userId).getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot delete root folder");
+        }
         folderService.deleteFolder(userId, folder);
-        // Delete all dependent notes
-        noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
         noteService.deleteNotesInFolder(userId, folder);
-        return new FolderDeletedJson("Folder deleted.");
+        return new GenericMessageResponse("Folder deleted.");
     }
 
     /**

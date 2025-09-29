@@ -3,6 +3,7 @@ package eu.projnull.memopad.controllers;
 import eu.projnull.memopad.services.FolderService;
 import eu.projnull.memopad.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,12 +31,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Authentication/sign in endpoint", security = {})
     public TokenResponse login(@RequestBody LoginCredentials loginCredentials) {
         String token = userService.login(loginCredentials.getUsername(), loginCredentials.getPassword());
         return new TokenResponse(token);
     }
 
     @PostMapping("/register")
+    @Operation(summary = "User sign up endpoint", security = {})
     public TokenResponse register(@RequestBody LoginCredentials loginCredentials) throws IllegalArgumentException {
         userService.register(loginCredentials.getUsername(), loginCredentials.getUsername(),
                 loginCredentials.getPassword());
