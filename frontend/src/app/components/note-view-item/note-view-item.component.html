@@ -21,7 +21,9 @@
 <dialog #modRen class="modal">
     <div class="modal-box w-60">
         <h3 class="text-lg font-bold">Rename:</h3>
-        <input type="text" placeholder="New Name" [value]="noteName" class="input" #renameInput />
+        <form method="dialog" (submit)="rename(renameInput.value)">
+            <input type="text" placeholder="New Name" [value]="noteName" class="input" #renameInput />
+        </form>
         <div class="modal-action">
         <form method="dialog">
             <!-- if there is a button in form, it will close the modal -->

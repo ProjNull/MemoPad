@@ -229,7 +229,6 @@ export class ApiService {
   }
 
   renameFolder(parentId:number, name:string) {
-    this.g.pushToast("info", "Renaming: " + name);
     let request = this.http.post<FolderResponse>(this.Url("folders",parentId.toString(), "rename"),{name},{
       headers: {
         "Authorization": "Bearer " + this.token
@@ -242,7 +241,6 @@ export class ApiService {
   }
 
   renameNote(noteID:number, name:string) {
-    this.g.pushToast("info", "Renaming: " + name);
     let request = this.http.post<FolderResponse>(this.Url("notes",noteID.toString(), "rename"),{name},{
       headers: {
         "Authorization": "Bearer " + this.token

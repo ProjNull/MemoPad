@@ -39,7 +39,7 @@ export class NoteViewItemComponent implements OnInit {
     }
     if (text) {
       this.api.renameNote(this.noteID,text).subscribe(()=> {
-        this.g.pushToast("success", "Renamed: " + this.noteName);
+        this.g.pushToast('success', 'Renamed "'+ this.noteName +'" to  "' + text + '"');
         this.loadNote();
       });
     }

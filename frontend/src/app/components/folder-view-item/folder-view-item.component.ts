@@ -81,14 +81,12 @@ export class FolderViewItemComponent implements OnInit {
   }
 
   renameFolder(text:string | null = null) {
-
-    
     if (text == null) {
       text = prompt("Rename Note:", this.folderName ?? "");
     }
     if (text && text != "") {
       this.api.renameFolder(this.folderID, text).subscribe(()=> {
-        this.g.pushToast("success", "Renamed: " + text);
+        this.g.pushToast('success', 'Renamed "'+ this.folderName +'" to  "' + text + '"');
         this.loadFolder();
       })
     }
@@ -100,9 +98,8 @@ export class FolderViewItemComponent implements OnInit {
       inpt =  confirm("Delete Folder?");
     }
     if (inpt) {
-      this.g.pushToast("info", "Deleting: " + name);
       this.api.deleteFolder(this.folderID).subscribe(()=> {
-        this.g.pushToast("success", "Deleted: " + name);
+        this.g.pushToast("success", "Deleted: " + this.folderName);
         this.fullReload.emit();
         this.deleted = true;
       })
