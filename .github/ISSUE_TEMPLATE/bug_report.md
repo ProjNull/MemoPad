@@ -3,7 +3,7 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: bug
-assignees: HyScript7, mobilex1122
+assignees: ''
 
 ---
 
