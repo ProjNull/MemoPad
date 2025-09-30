@@ -7,7 +7,10 @@
                 <input type="password" formControlName="password" placeholder="Password" class="input" />
                 <input type="email" formControlName="email" placeholder="Email" class="input" />
                 <div class="card-actions flex-col">
-                    <button class="btn w-full btn-primary" [disabled]="api.isLoading()">Register</button>
+                    <button class="btn w-full btn-primary" [disabled]="api.isLoading()">
+                        @if (api.isLoading()) {<span class="loading loading-spinner"></span>}
+                        Register
+                    </button>
                     <button type="button" class="btn w-full btn-secondary btn-outline" (click)="global.go('/auth/login')" [disabled]="api.isLoading()">Login</button>
                 </div>
             </form>

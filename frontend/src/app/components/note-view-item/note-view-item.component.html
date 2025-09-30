@@ -8,7 +8,9 @@
         </a>
 
         <div class="dropdown">
-            <div tabindex="0" role="button" class="note-btn btn block btn-ghost rounded-full border-0 p-0 w-6 h-6 mr-2">:</div>
+            <div tabindex="0" role="button" class="note-btn btn block btn-ghost rounded-full border-0 p-0 w-6 h-6 mr-2 flex justify-center items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20q-.825 0-1.412-.587T10 18t.588-1.412T12 16t1.413.588T14 18t-.587 1.413T12 20m0-6q-.825 0-1.412-.587T10 12t.588-1.412T12 10t1.413.588T14 12t-.587 1.413T12 14m0-6q-.825 0-1.412-.587T10 6t.588-1.412T12 4t1.413.588T14 6t-.587 1.413T12 8"/></svg>
+                </div>
             <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
                 <li><a (click)="modRen.showModal()">Rename Note</a></li>
                 <li><a (click)="modDel.showModal()">Delete Note</a></li>
