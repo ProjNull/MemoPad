@@ -47,7 +47,7 @@ export class ApiService {
 
   tryRecoverToken() {
     var possibleToken = localStorage.getItem("token");
-    if (possibleToken) {
+    if (possibleToken && possibleToken != "") {
       this.g.pushToast("info", "Logging in.");
       this.mainLoading = true;
       this.token = possibleToken;
@@ -59,8 +59,13 @@ export class ApiService {
         error: (response) => {
           this.mainLoading = false;
           this.token = null;
+          localStorage.removeItem("token")
+          this.g.pushOnReloadToast("warning","You have been logged out!")
+          location.reload()
         }
       })
+    } else {
+      this.token = null;
     }
   }
 
@@ -69,13 +74,6 @@ export class ApiService {
     let request = this.http.get<InfoResponse>(this.Url("auth","info"),{
       headers: {
         "Authorization": "Bearer " + this.token
-      }
-    })
-
-    request.subscribe({
-      error: (response) => {
-        this.handleError(response);
-        this.mainLoading =false;
       }
     })
 

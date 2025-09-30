@@ -57,10 +57,23 @@
             </ul>
             <div class="grow"></div>
             <div class="disclaimer rounded"><b>Env: Testing</b></div>
-            <button class="btn btn-outline btn-error" (click)="logout()">Logout</button>
+            <button class="btn btn-outline btn-error" (click)="modLogout.showModal()">Logout</button>
         </ul>
     </div>
 </div>
+
+<dialog #modLogout class="modal">
+    <div class="modal-box w-60">
+        <h3 class="text-lg font-bold">Logout?</h3>
+        <div class="modal-action">
+        <form method="dialog">
+            <!-- if there is a button in form, it will close the modal -->
+            <button class="btn btn-primary" (click)="logout()">Yes</button>
+            <button class="btn">No</button>
+        </form>
+        </div>
+    </div>
+</dialog>
 
 
 

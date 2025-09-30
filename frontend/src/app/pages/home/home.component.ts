@@ -21,10 +21,11 @@ export class HomeComponent implements OnInit {
   autoSaveTimeout: number | undefined = undefined;
 
   logout() {
-    if (confirm("Really log out?")) {
-      this.api.logout();
-      location.reload();
-    }
+
+    this.api.logout();
+    this.global.pushOnReloadToast("info","Logged Out");
+    location.reload();
+    
   }
 
   ngOnInit(): void {

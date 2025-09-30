@@ -16,7 +16,21 @@ type Toast = {
 })
 export class GlobalService {
 
-  constructor(private router:Router) { }
+  constructor(private router:Router) {
+
+    const reloadToastRaw = sessionStorage.getItem("onReloadToast");
+    if (reloadToastRaw) {
+      try {
+        const data = JSON.parse(reloadToastRaw) as Toast;
+
+        this.pushToast(data.type, data.msg);
+
+      } catch (e) {
+        console.log("Error while displaing Reload Toast")
+      }
+      sessionStorage.removeItem("onReloadToast")
+    }
+  }
 
   private openFolders:number[] = [];
 
@@ -58,8 +72,10 @@ export class GlobalService {
     return this.openFolders.indexOf(id) != -1;
   }
 
+  private itr = 0;
+
   pushToast(type:ToastType, msg:string) {
-    var toastID = this.toasts.length + 1
+    var toastID = ++this.itr;
     this.toasts.push({
       id: toastID,
       type,msg,
@@ -71,6 +87,16 @@ export class GlobalService {
         return toast.id != toastID
       })
     },2000)
+  }
+
+  pushOnReloadToast(type:ToastType, msg:string) {
+
+    const data = JSON.stringify({
+      id: ++this.itr,
+      type,msg,
+      shown:false
+    });
+    sessionStorage.setItem("onReloadToast", data);
   }
 
   setOpenNote(noteID: number) {
