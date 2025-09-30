@@ -62,7 +62,7 @@ export class HomeComponent implements OnInit {
   onEditBox(event: Event) {
     const target = event.target as HTMLTextAreaElement;
     if (target) {
-      if  (this.note && this.note.content) {
+      if  (this.note) {
         this.isChanged = true;
         this.note.content = target.value;
       }
