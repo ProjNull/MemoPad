@@ -1,6 +1,7 @@
 package eu.projnull.memopad.controllers;
 
 import eu.projnull.memopad.controllers.dto.*;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,6 +39,7 @@ public class FolderController {
      * @return the root folder
      */
     @GetMapping("/")
+    @Operation(summary = "Returns the user's root/main folder.")
     public FolderResponse getRoot() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -54,6 +56,7 @@ public class FolderController {
      *         does not belong to the user
      */
     @GetMapping("/{id}")
+    @Operation(summary = "Returns information about the specified folder.")
     public FolderResponse getFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -74,6 +77,7 @@ public class FolderController {
      * @return the created folder
      */
     @PostMapping("/{id}/create")
+    @Operation(summary = "Creates a new child folder within the specified parent folder (id param)")
     public FolderResponse createChild(@PathVariable(value = "id") Long id, @RequestBody FolderCreate folderCreate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -91,6 +95,7 @@ public class FolderController {
      * @return "deleted"
      */
     @DeleteMapping("/{id}/delete")
+    @Operation(summary = "Deletes the specified parent folder (id param)")
     public GenericMessageResponse deleteFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -112,6 +117,7 @@ public class FolderController {
      * @return the renamed folder
      */
     @PostMapping("/{id}/rename")
+    @Operation(summary = "Renames the specified folder (param id) to the new name given in request body.")
     public FolderResponse renameFolder(@PathVariable(value = "id") Long id, @RequestBody FolderNameUpdate folderNameUpdate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -130,6 +136,7 @@ public class FolderController {
      * @return the moved folder
      */
     @PostMapping("/{id}/move/{parentId}")
+    @Operation(summary = "Changes the parent of a specified folder (first id param) to the new parent folder (second id param).")
     public FolderResponse moveFolder(@PathVariable(value = "id") Long id, @PathVariable(value = "parentId") Long parentId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -147,6 +154,7 @@ public class FolderController {
      * @return a list of the notes in the folder
      */
     @GetMapping("/{id}/files")
+    @Operation(summary = "Returns a list of notes in the specified folder (param id)")
     public List<NoteResponse> getFiles(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -161,6 +169,7 @@ public class FolderController {
      * @return a list of the subfolders in the folder
      */
     @GetMapping("/{id}/folders")
+    @Operation(summary = "Returns a list of subfolders in a given folder (param id).")
     public List<FolderResponse> getFolders(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();

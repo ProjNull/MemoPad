@@ -31,14 +31,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    @Operation(summary = "Authentication/sign in endpoint", security = {})
+    @Operation(summary = "Authentication/sign in endpoint", security = {}, description = "Accepts user credentials and returns a response with a token string field if valid.")
     public TokenResponse login(@RequestBody LoginCredentials loginCredentials) {
         String token = userService.login(loginCredentials.getUsername(), loginCredentials.getPassword());
         return new TokenResponse(token);
     }
 
     @PostMapping("/register")
-    @Operation(summary = "User sign up endpoint", security = {})
+    @Operation(summary = "User sign up endpoint", security = {}, description = "Accepts desired user credentials and creates a new account with the given username if it isn't taken already. Returns a JWT token in a token string field is registration was successful")
     public TokenResponse register(@RequestBody LoginCredentials loginCredentials) throws IllegalArgumentException {
         userService.register(loginCredentials.getUsername(), loginCredentials.getUsername(),
                 loginCredentials.getPassword());
@@ -49,6 +49,7 @@ public class UserController {
     }
 
     @GetMapping("/info")
+    @Operation(summary = "Returns information about the current user.")
     public UserPublicResponse info() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new UserPublicResponse(user.getId(), user.getUsername(), user.getEmail());
