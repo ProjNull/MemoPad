@@ -4,6 +4,8 @@ import eu.projnull.memopad.services.FolderService;
 import eu.projnull.memopad.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,6 +38,10 @@ public class UserController {
 
     @PostMapping("/login")
     @Operation(summary = "Authentication/sign in endpoint", security = {}, description = "Accepts user credentials and returns a response with a token string field if valid.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully signed in."), 
+        @ApiResponse(responseCode = "401", description = "Bad credentials.")
+    })
     public TokenResponse login(@RequestBody LoginCredentials loginCredentials) {
         try {
             String token = userService.login(loginCredentials.getUsername(), loginCredentials.getPassword());
@@ -47,6 +53,10 @@ public class UserController {
 
     @PostMapping("/register")
     @Operation(summary = "User sign up endpoint", security = {}, description = "Accepts desired user credentials and creates a new account with the given username if it isn't taken already. Returns a JWT token in a token string field is registration was successful")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Successfully signed up."), 
+        @ApiResponse(responseCode = "409", description = "Username already in use.")
+    })
     public TokenResponse register(@RequestBody LoginCredentials loginCredentials) throws IllegalArgumentException {
         try {
             userService.loadUserByUsername(loginCredentials.getUsername());
@@ -64,6 +74,10 @@ public class UserController {
 
     @GetMapping("/info")
     @Operation(summary = "Returns information about the current user.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Session token valid."), 
+        @ApiResponse(responseCode = "403", description = "No valid session token provided. (filtered before reaching this endpoint)")
+    })
     public UserPublicResponse info() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return new UserPublicResponse(user.getId(), user.getUsername(), user.getEmail());
