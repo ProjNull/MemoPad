@@ -4,9 +4,13 @@ import eu.projnull.memopad.services.FolderService;
 import eu.projnull.memopad.services.UserService;
 
 import io.swagger.v3.oas.annotations.Operation;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import eu.projnull.memopad.controllers.dto.LoginCredentials;
 import eu.projnull.memopad.controllers.dto.TokenResponse;
@@ -33,13 +37,23 @@ public class UserController {
     @PostMapping("/login")
     @Operation(summary = "Authentication/sign in endpoint", security = {}, description = "Accepts user credentials and returns a response with a token string field if valid.")
     public TokenResponse login(@RequestBody LoginCredentials loginCredentials) {
-        String token = userService.login(loginCredentials.getUsername(), loginCredentials.getPassword());
-        return new TokenResponse(token);
+        try {
+            String token = userService.login(loginCredentials.getUsername(), loginCredentials.getPassword());
+            return new TokenResponse(token);
+        } catch (UsernameNotFoundException | IllegalArgumentException ex) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid username or password.");
+        }
     }
 
     @PostMapping("/register")
     @Operation(summary = "User sign up endpoint", security = {}, description = "Accepts desired user credentials and creates a new account with the given username if it isn't taken already. Returns a JWT token in a token string field is registration was successful")
     public TokenResponse register(@RequestBody LoginCredentials loginCredentials) throws IllegalArgumentException {
+        try {
+            userService.loadUserByUsername(loginCredentials.getUsername());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already in use.");
+        } catch (UsernameNotFoundException ignored) {
+            // Username is available
+        }
         userService.register(loginCredentials.getUsername(), loginCredentials.getUsername(),
                 loginCredentials.getPassword());
         User user = (User) userService.loadUserByUsername(loginCredentials.getUsername());
