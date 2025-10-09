@@ -13,7 +13,8 @@ import org.springframework.context.annotation.Configuration;
         info = @Info(title = "Memopad API", version = "1.2.0", description = "The Spring Boot backend for {NULL} MemoPad"),
         servers = {
                 @Server(url = "https://memopad.script.projnull.eu", description = "Production (HTTPS)"),
-                @Server(url = "http://localhost:4200", description = "Local dev for Angular proxy (HTTP)")
+                @Server(url = "http://localhost:4200", description = "Local dev for Angular proxy (HTTP)"),
+                @Server(url = "http://localhost:8080", description = "Local dev for Spring Boot")
         },
         security = @SecurityRequirement(name = "bearerAuth") // Apply globally
 )

@@ -2,6 +2,9 @@ package eu.projnull.memopad.controllers;
 
 import eu.projnull.memopad.controllers.dto.*;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -40,6 +43,10 @@ public class FolderController {
      */
     @GetMapping("/")
     @Operation(summary = "Returns the user's root/main folder.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns the user's root folder."), 
+        @ApiResponse(responseCode = "403", description = "Invalid session (filtered before reaching this endpoint)")
+    })
     public FolderResponse getRoot() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -57,16 +64,17 @@ public class FolderController {
      */
     @GetMapping("/{id}")
     @Operation(summary = "Returns information about the specified folder.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns the specified folder."), 
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public FolderResponse getFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
-        try {
-            Folder folder = folderService.getFolder(userId, id);
-            List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
-            return new FolderResponse(folder, notes);
-        } catch (IllegalArgumentException e) {
-            return null;
-        }
+        Folder folder = folderService.getFolder(userId, id);
+        List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
+        return new FolderResponse(folder, notes);
     }
 
     /**
@@ -78,6 +86,11 @@ public class FolderController {
      */
     @PostMapping("/{id}/create")
     @Operation(summary = "Creates a new child folder within the specified parent folder (id param)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns the newly created folder."), 
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public FolderResponse createChild(@PathVariable(value = "id") Long id, @RequestBody FolderCreate folderCreate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -96,6 +109,12 @@ public class FolderController {
      */
     @DeleteMapping("/{id}/delete")
     @Operation(summary = "Deletes the specified parent folder (id param)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns the user's root folder."), 
+        @ApiResponse(responseCode = "400", description = "Bad body or specified folder is root."),
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public GenericMessageResponse deleteFolder(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -118,6 +137,11 @@ public class FolderController {
      */
     @PostMapping("/{id}/rename")
     @Operation(summary = "Renames the specified folder (param id) to the new name given in request body.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns the modified folder."), 
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public FolderResponse renameFolder(@PathVariable(value = "id") Long id, @RequestBody FolderNameUpdate folderNameUpdate) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -137,6 +161,11 @@ public class FolderController {
      */
     @PostMapping("/{id}/move/{parentId}")
     @Operation(summary = "Changes the parent of a specified folder (first id param) to the new parent folder (second id param).")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns the modified folder."), 
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public FolderResponse moveFolder(@PathVariable(value = "id") Long id, @PathVariable(value = "parentId") Long parentId) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -155,6 +184,11 @@ public class FolderController {
      */
     @GetMapping("/{id}/files")
     @Operation(summary = "Returns a list of notes in the specified folder (param id)")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns an array of files in the specified folder."), 
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public List<NoteResponse> getFiles(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
@@ -170,6 +204,11 @@ public class FolderController {
      */
     @GetMapping("/{id}/folders")
     @Operation(summary = "Returns a list of subfolders in a given folder (param id).")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Returns an array of folders in the specified folder."), 
+        @ApiResponse(responseCode = "404", description = "Folder not found."),
+        @ApiResponse(responseCode = "403", description = "Invalid session or folder belongs to another user.")
+    })
     public List<FolderResponse> getFolders(@PathVariable(value = "id") Long id) {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();

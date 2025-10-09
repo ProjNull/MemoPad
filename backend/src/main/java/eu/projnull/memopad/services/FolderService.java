@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import eu.projnull.memopad.models.Folder;
 import eu.projnull.memopad.repositories.FolderRepository;
+import eu.projnull.memopad.services.exceptions.FolderDoesntBelongToUser;
+import eu.projnull.memopad.services.exceptions.FolderNotFound;
 
 @Service
 public class FolderService {
@@ -23,34 +25,37 @@ public class FolderService {
         return folderRepository.save(folder);
     }
 
-    public void deleteFolder(long ownerId, Folder folder) {
+    public void deleteFolder(long ownerId, Folder folder) throws FolderDoesntBelongToUser {
         if (folder.getOwnerId() != ownerId) {
-            throw new IllegalArgumentException("Folder does not belong to user");
+            throw new FolderDoesntBelongToUser("Folder does not belong to this user.");
         }
         folderRepository.delete(folder);
     }
 
-    public Folder moveFolder(long ownerId, Folder folder, Folder newParentFolder) {
+    public Folder moveFolder(long ownerId, Folder folder, Folder newParentFolder) throws FolderDoesntBelongToUser {
         if (folder.getOwnerId() != ownerId) {
-            throw new IllegalArgumentException("Folder does not belong to user");
+            throw new FolderDoesntBelongToUser("Folder does not belong to this user.");
         }
         // TODO: Check whether newParentFolder is a child of this folder or child of this folder's children 
         folder.setParentFolder(newParentFolder);
         return folderRepository.save(folder);
     }
 
-    public Folder renameFolder(long ownerId, Folder folder, String newName) {
+    public Folder renameFolder(long ownerId, Folder folder, String newName) throws FolderDoesntBelongToUser {
         if (folder.getOwnerId() != ownerId) {
-            throw new IllegalArgumentException("Folder does not belong to user");
+            throw new FolderDoesntBelongToUser("Folder does not belong to this user.");
         }
         folder.setName(newName);
         return folderRepository.save(folder);
     }
 
-    public Folder getFolder(long ownerId, long folderId) {
+    public Folder getFolder(long ownerId, long folderId) throws FolderNotFound, FolderDoesntBelongToUser {
         Folder folder = folderRepository.findById(folderId).orElse(null);
-        if (folder == null || folder.getOwnerId() != ownerId) {
-            throw new IllegalArgumentException("Folder does not exist or does not belong to user");
+        if (folder == null) {
+            throw new FolderNotFound("Folder with the specified ID does not exist.");
+        }
+        else if (folder.getOwnerId() != ownerId) {
+            throw new FolderDoesntBelongToUser("Folder does not belong to this user.");
         }
         return folder;
     }
