@@ -17,8 +17,18 @@ type Toast = {
 })
 export class GlobalService {
 
+  // Makes sure that accidental drops/interactions from other windows/tabs are ignored
+  private FEvalidationNumber = 0;
+  public validateFERequest(num:Number) {
+    return num == this.FEvalidationNumber;
+  }
+  public getFEValNumber() {
+    return this.FEvalidationNumber;
+  }
+
+
   constructor(private router:Router) {
-    
+    this.FEvalidationNumber = Math.random();
     toObservable(this.devMode).subscribe((newState) => {
       console.log("Devmode: " + newState);
 

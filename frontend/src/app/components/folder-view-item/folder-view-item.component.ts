@@ -150,8 +150,12 @@ export class FolderViewItemComponent implements OnInit {
       console.log(dataRaw);
       if (dataRaw) {
         var data = JSON.parse(dataRaw);
-        if (data && data.type) {
+        if (data && data.type && data.val) {
           console.log(data);
+          if (!this.g.validateFERequest(data.val)) {
+            console.warn("Wrong Validation number");
+            return;
+          }
           if (data.type == "note") {
             if (data.folderID != this.folderID) {
               this.g.pushToast("info","Moving Note")
@@ -186,7 +190,8 @@ export class FolderViewItemComponent implements OnInit {
     
     var data = {
       type: "folder",
-      id: this.folderID
+      id: this.folderID,
+      val: this.g.getFEValNumber()
     }
 
     event.dataTransfer!.setData("memopad/move",JSON.stringify(data));

@@ -78,7 +78,8 @@ export class NoteViewItemComponent implements OnInit {
     var data = {
       type: "note",
       id: this.noteID,
-      folderID: this.noteParrent
+      folderID: this.noteParrent,
+      val: this.g.getFEValNumber()
     }
 
     event.dataTransfer!.setData("memopad/move",JSON.stringify(data));
