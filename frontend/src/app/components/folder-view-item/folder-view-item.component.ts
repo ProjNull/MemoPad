@@ -1,4 +1,4 @@
-import { Component, Input, model, OnInit, output, Output } from '@angular/core';
+import { Component, ElementRef, Input, model, OnInit, output, Output, ViewChild } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { GlobalService } from '../../global.service';
 
@@ -9,6 +9,11 @@ import { GlobalService } from '../../global.service';
   styleUrl: './folder-view-item.component.css'
 })
 export class FolderViewItemComponent implements OnInit {
+
+  @ViewChild('dropDown') dropDown!:ElementRef<HTMLElement>; 
+  @ViewChild('folderElement') folderElement!:ElementRef<HTMLElement>; 
+
+  
 
   @Input("folder-id") folderID = -0;
   @Input("open") openByDefault = false;
@@ -22,7 +27,7 @@ export class FolderViewItemComponent implements OnInit {
 
   notesIDs:number[] = [];
 
-  constructor(private api:ApiService, private g:GlobalService) {};
+  constructor(private api:ApiService, public g:GlobalService) {};
 
   folderName:string | null = null;
   childIds:number[] = []
@@ -45,7 +50,7 @@ export class FolderViewItemComponent implements OnInit {
   loadFolder() {
     this.folderName = null;
     
-    this.api.getFolder(this.folderID).subscribe((resp) => {
+    this.api.getFolder(this.isRoot ? -1 : this.folderID).subscribe((resp) => {
       this.folderName = resp.name;
       this.folderID = resp.id;
       this.childIds = resp.subFolderIds;
@@ -105,4 +110,87 @@ export class FolderViewItemComponent implements OnInit {
       })
     }
   }
+
+  toggleFolder() {
+    if (!this.isRoot) {
+      this.show.set(!this.show())
+    } else {
+      this.show.set(true);
+    }
+  }
+
+  focus(event:MouseEvent) {
+    event.preventDefault();
+    if (document.activeElement) {
+      (document.activeElement as HTMLElement).blur();
+    }
+    setTimeout(() => this.dropDown.nativeElement.focus(), 1);
+  }
+
+
+  dragOverHandler(event:DragEvent) {
+    if (event.target) {
+      var target = (event.target as HTMLElement);
+      this.folderElement.nativeElement.classList.add("dropping")
+
+    }
+    event.preventDefault();
+  }
+
+  dragLeaveHandler(event:DragEvent) {
+    if (event.target) {
+      var target = (event.target as HTMLElement);
+      this.folderElement.nativeElement.classList.remove("dropping")
+    }
+  }
+
+  dragDropHandler(event:DragEvent) {
+    if (event.dataTransfer) {
+      var dataRaw = event.dataTransfer.getData("memopad/move");
+      console.log(dataRaw);
+      if (dataRaw) {
+        var data = JSON.parse(dataRaw);
+        if (data && data.type) {
+          console.log(data);
+          if (data.type == "note") {
+            if (data.folderID != this.folderID) {
+              this.g.pushToast("info","Moving Note")
+              this.api.moveNote(data.id,this.folderID).subscribe(()=> {
+                this.g.setFolderState(this.folderID, true);
+                this.doFullReload();
+                this.g.pushToast("success", "Done");
+              });
+            }
+            
+          } else if (data.type == "folder") {
+            if (data.id != this.folderID) {
+              this.g.pushToast("info","Moving Folder")
+              this.api.moveFolder(data.id,this.folderID).subscribe(()=> {
+                this.g.setFolderState(this.folderID, true);
+                this.doFullReload();
+                this.g.pushToast("success", "Done");
+              });
+            }
+
+          } else {
+            this.g.pushToast("warning","Wrong Move Type")
+          }
+        }
+      }
+    }
+    this.folderElement.nativeElement.classList.remove("dropping")
+    
+  }
+
+  dragStartHandler(event:DragEventInit) {
+    
+    var data = {
+      type: "folder",
+      id: this.folderID
+    }
+
+    event.dataTransfer!.setData("memopad/move",JSON.stringify(data));
+    
+  }
+  
 }

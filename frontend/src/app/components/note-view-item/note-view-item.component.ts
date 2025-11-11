@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, output } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, output, ViewChild } from '@angular/core';
 import { ApiService } from '../../api.service';
 import { GlobalService } from '../../global.service';
 
@@ -9,13 +9,17 @@ import { GlobalService } from '../../global.service';
   styleUrl: './note-view-item.component.css'
 })
 export class NoteViewItemComponent implements OnInit {
+
+  @ViewChild('dropDown') dropDown!:ElementRef<HTMLElement>; 
+
   @Input("note-id") noteID = -0;
 
   fullReload = output<void>();
 
 
   noteName: string | null = null;
-  constructor(private api:ApiService, private g:GlobalService) {};
+  noteParrent: number | null = null;
+  constructor(private api:ApiService, public g:GlobalService) {};
 
   ngOnInit(): void {
     this.loadNote();
@@ -24,6 +28,7 @@ export class NoteViewItemComponent implements OnInit {
   private loadNote() {
     this.api.getNote(this.noteID)?.subscribe((note)=> {
       this.noteName = note.title
+      this.noteParrent = note.folderId
     })
   }
   
@@ -57,5 +62,26 @@ export class NoteViewItemComponent implements OnInit {
         this.g.pushToast("success", "Deleted: " + this.noteName);
       });
     }
+  }
+
+  focus(event:MouseEvent) {
+    event.preventDefault();
+    if (document.activeElement) {
+      (document.activeElement as HTMLElement).blur();
+    }
+    setTimeout(() => this.dropDown.nativeElement.focus(), 1);
+  }
+
+
+  dragStartHandler(event:DragEventInit) {
+    
+    var data = {
+      type: "note",
+      id: this.noteID,
+      folderID: this.noteParrent
+    }
+
+    event.dataTransfer!.setData("memopad/move",JSON.stringify(data));
+    
   }
 }

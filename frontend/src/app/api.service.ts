@@ -249,6 +249,29 @@ export class ApiService {
     return request;
   }
 
+  moveFolder(parentId:number, folderId:number) {
+    let request = this.http.post<FolderResponse>(this.Url("folders",parentId.toString(), "move", folderId.toString()),{},{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = this.bindHandlers(request);
+
+    return request;
+  }
+
+  moveNote(noteID:number, folderId:number) {
+    let request = this.http.post<FolderResponse>(this.Url("notes",noteID.toString(), "move"),{folderId},{
+      headers: {
+        "Authorization": "Bearer " + this.token
+      }
+    })
+
+    request = this.bindHandlers(request);
+    return request;
+  }
+
   deleteFolder(id:number) {
     let request = this.http.delete<FolderResponse>(this.Url("folders",id.toString(), "delete"),{
       headers: {

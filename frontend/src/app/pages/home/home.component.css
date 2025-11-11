@@ -3,10 +3,14 @@
 
 
 .emptyNote {
-    @apply lg:hidden;
+    @apply md:hidden;
 }
 
 
 .disclaimer {
-    @apply text-center p-1 text-xs bg-amber-800;
+    @apply text-center p-1 text-xs bg-amber-800 text-white;
+}
+
+.dev-mode-note {
+    @apply text-center p-1 text-xs bg-yellow-400 text-black;
 }

@@ -1,11 +1,11 @@
 
-<div class="drawer lg:drawer-open w-screen">
+<div class="drawer md:drawer-open w-screen">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
     <div class="drawer-content h-screen flex flex-col ">
       <!-- Page content here -->
         <div class="navbar bg-base-300 shadow-sm flex justify-between " [class.emptyNote]="(note == null)">
             <div class="flex gap-2 items-center">
-                <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
+                <label for="my-drawer-2" class="btn btn-primary drawer-button md:hidden">
                 <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="currentColor" d="M3 18v-2h18v2zm0-5v-2h18v2zm0-5V6h18v2z"/></svg>
                 </label>
                 @if (note) {
@@ -46,7 +46,9 @@
             </div>
         }
 
-        <div class="disclaimer">Do not share personal info!!</div>
+
+        
+
         
     </div>
     <div class="drawer-side">
@@ -56,6 +58,9 @@
                 <app-folder-view-item [open]="true" [folder-id]="-1" [is-root]="true"></app-folder-view-item>
             </ul>
             <div class="grow"></div>
+            @if (global.devMode()) {
+                <div class="dev-mode-note rounded">Dev Mode</div>
+            }
             <div class="disclaimer rounded"><b>Env: Testing</b></div>
             <button class="btn btn-outline btn-error" (click)="modLogout.showModal()">Logout</button>
         </ul>

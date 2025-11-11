@@ -1,5 +1,6 @@
-import { Injectable } from '@angular/core';
+import { effect, Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
 
 
 type ToastType = "info" | "warning" | "success" | "error";
@@ -17,7 +18,16 @@ type Toast = {
 export class GlobalService {
 
   constructor(private router:Router) {
+    
+    toObservable(this.devMode).subscribe((newState) => {
+      console.log("Devmode: " + newState);
 
+      if (newState) {
+        localStorage.setItem("devmode","yes");
+      } else {
+        localStorage.setItem("devmode","no")
+      }
+    });
     const reloadToastRaw = sessionStorage.getItem("onReloadToast");
     if (reloadToastRaw) {
       try {
@@ -30,7 +40,38 @@ export class GlobalService {
       }
       sessionStorage.removeItem("onReloadToast")
     }
+
+    if (localStorage.getItem("devmode") == "yes") {
+      this.devMode.set(true);
+    }
   }
+
+  
+  copyToClipboard(text:string |undefined) {
+    if (text) {
+      if (navigator.clipboard) {
+          // Use the Clipboard API
+          navigator.clipboard.writeText(text).then(() => {
+              this.pushToast("success","Succesfully copied!")
+          }).catch(err => {
+              this.pushToast("error","Failed to copy!")
+            
+              console.error('Failed to copy text to clipboard: ', err);
+          });
+      } else {
+          this.pushToast("warning","Feature unsuporeted")
+      }
+    }
+  }
+
+  blurCurrentElement() {
+    if (document.activeElement) {
+      (document.activeElement as HTMLElement).blur()
+    }
+  }
+
+  public devMode = signal(false);
+
 
   private openFolders:number[] = [];
 

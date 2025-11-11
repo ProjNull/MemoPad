@@ -1,19 +1,37 @@
 @if (noteName) {
 <li>
-    <div class="note flex p-0">
+    <div class="note flex p-0" draggable="true" draggable="true"   (contextmenu)="focus($event)" (dragstart)="dragStartHandler($event)">
     
         <a (click)="select()" class="grow p-1 flex gap-1 flex-nowrap items-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 256 256"><path fill="currentColor" d="M88 96a8 8 0 0 1 8-8h64a8 8 0 0 1 0 16H96a8 8 0 0 1-8-8m8 40h64a8 8 0 0 0 0-16H96a8 8 0 0 0 0 16m32 16H96a8 8 0 0 0 0 16h32a8 8 0 0 0 0-16m96-104v108.69a15.86 15.86 0 0 1-4.69 11.31L168 219.31a15.86 15.86 0 0 1-11.31 4.69H48a16 16 0 0 1-16-16V48a16 16 0 0 1 16-16h160a16 16 0 0 1 16 16M48 208h104v-48a8 8 0 0 1 8-8h48V48H48Zm120-40v28.7l28.69-28.7Z"/></svg>
+            
+            
             {{ noteName }}
+            
         </a>
 
         <div class="dropdown">
-            <div tabindex="0" role="button" class="note-btn btn block btn-ghost rounded-full border-0 p-0 w-6 h-6 mr-2 flex justify-center items-center">
+            <div tabindex="0" #dropDown role="button" class="note-btn btn block btn-ghost rounded-full border-0 p-0 w-6 h-6 mr-2 flex justify-center items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20q-.825 0-1.412-.587T10 18t.588-1.412T12 16t1.413.588T14 18t-.587 1.413T12 20m0-6q-.825 0-1.412-.587T10 12t.588-1.412T12 10t1.413.588T14 12t-.587 1.413T12 14m0-6q-.825 0-1.412-.587T10 6t.588-1.412T12 4t1.413.588T14 6t-.587 1.413T12 8"/></svg>
                 </div>
-            <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
+            <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
                 <li><a (click)="modRen.showModal()">Rename Note</a></li>
                 <li><a (click)="modDel.showModal()">Delete Note</a></li>
+                @if (g.devMode()) {
+                    <hr class="opacity-25 my-2">
+                    <li>
+                        <a (click)="g.copyToClipboard(noteID.toString()); g.blurCurrentElement()">
+                            Copy NoteID
+                            <span class="badge badge-xs badge-primary">Dev</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="g.copyToClipboard(noteParrent?.toString()); g.blurCurrentElement()">
+                            Copy FolderID
+                            <span class="badge badge-xs badge-primary">Dev</span>
+                        </a>
+                    </li>
+                }
             </ul>
         </div>
         
