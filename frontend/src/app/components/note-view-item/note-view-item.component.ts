@@ -11,6 +11,7 @@ import { GlobalService } from '../../global.service';
 export class NoteViewItemComponent implements OnInit {
 
   @ViewChild('dropDown') dropDown!:ElementRef<HTMLElement>; 
+  @ViewChild('noteElement') noteElement!:ElementRef<HTMLElement>; 
 
   @Input("note-id") noteID = -0;
 
@@ -72,15 +73,26 @@ export class NoteViewItemComponent implements OnInit {
     setTimeout(() => this.dropDown.nativeElement.focus(), 1);
   }
 
+  dragEnd() {
+    
+    this.noteElement.nativeElement.classList.remove("dragging")
+
+
+  }
+
 
   dragStartHandler(event:DragEventInit) {
+    this.noteElement.nativeElement.classList.add("dragging")
     
+    
+
     var data = {
       type: "note",
       id: this.noteID,
       folderID: this.noteParrent,
       val: this.g.getFEValNumber()
     }
+    
 
     event.dataTransfer!.setData("memopad/move",JSON.stringify(data));
     

@@ -186,7 +186,16 @@ export class FolderViewItemComponent implements OnInit {
     
   }
 
+  dragEnd() {
+    
+    this.folderElement.nativeElement.classList.remove("dragging")
+
+
+  }
+
   dragStartHandler(event:DragEventInit) {
+    this.folderElement.nativeElement.classList.add("dragging")
+
     
     var data = {
       type: "folder",

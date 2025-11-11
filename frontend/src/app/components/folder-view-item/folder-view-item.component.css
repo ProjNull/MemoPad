@@ -13,3 +13,10 @@
 .dropping {
     @apply outline-2 -outline-offset-1 outline-primary;
 }
+
+.dragging:active,
+.dragging:focus,
+.dragging:hover,
+.dragging {
+    @apply bg-gray-300 dark:bg-gray-700  scale-95;
+}

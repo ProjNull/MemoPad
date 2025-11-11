@@ -3,6 +3,7 @@
     <li>
         <div #folderElement class="folder flex p-0" (contextmenu)="focus($event)"
         draggable="{{!isRoot ? 'true' : ''}}"
+        (dragend)="dragEnd()"
         (dragover)="dragOverHandler($event)"
         (dragleave)="dragLeaveHandler($event)"
         (drop)="dragDropHandler($event)"
