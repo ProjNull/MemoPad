@@ -17,8 +17,24 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20q-.825 0-1.412-.587T10 18t.588-1.412T12 16t1.413.588T14 18t-.587 1.413T12 20m0-6q-.825 0-1.412-.587T10 12t.588-1.412T12 10t1.413.588T14 12t-.587 1.413T12 14m0-6q-.825 0-1.412-.587T10 6t.588-1.412T12 4t1.413.588T14 6t-.587 1.413T12 8"/></svg>
                 </div>
             <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
-                <li><a (click)="modRen.showModal()">Rename Note</a></li>
-                <li><a (click)="modDel.showModal()">Delete Note</a></li>
+                <li>
+                    <a (click)="modRen.showModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--stylus-fountain-pen-outline-rounded"/></svg>
+                        Rename
+                    </a>
+                </li>
+                <li>
+                    <a class="opacity-50" disabled="true">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--arrow-forward-rounded"/></svg>
+                        Move
+                    </a>
+                </li>
+                <li>
+                    <a (click)="modDel.showModal()">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--delete-outline-rounded"/></svg>
+                        Delete
+                    </a>
+                </li>
                 @if (g.devMode()) {
                     <hr class="opacity-25 my-2">
                     <li>

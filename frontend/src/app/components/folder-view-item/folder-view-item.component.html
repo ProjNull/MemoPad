@@ -18,9 +18,9 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M15.707 11.293a1 1 0 0 1 0 1.414l-5.657 5.657a1 1 0 1 1-1.414-1.414l4.95-4.95l-4.95-4.95a1 1 0 0 1 1.414-1.414z"/></g></svg>
                     }
                 }
-                
+
                 {{ folderName }}
-                
+
             </a>
 
             <div class="dropdown">
@@ -28,11 +28,38 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="currentColor" d="M12 20q-.825 0-1.412-.587T10 18t.588-1.412T12 16t1.413.588T14 18t-.587 1.413T12 20m0-6q-.825 0-1.412-.587T10 12t.588-1.412T12 10t1.413.588T14 12t-.587 1.413T12 14m0-6q-.825 0-1.412-.587T10 6t.588-1.412T12 4t1.413.588T14 6t-.587 1.413T12 8"/></svg>
                 </div>
                 <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 p-2 shadow-sm right-0 w-45">
-                    <li><a  (click)="modNewFolder.showModal()">New Folder</a></li>
-                    <li><a (click)="modNewNote.showModal()">New Note</a></li>
-                    <li><a (click)="modRen.showModal()">Rename Folder</a></li>
+                    <li>
+                        <a  (click)="modNewFolder.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--folder-outline"/></svg>
+                            New Folder
+                        </a>
+                    </li>
+                    <li>
+                        <a (click)="modNewNote.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--note-outline"/></svg>
+                            New Note
+                        </a>
+                    </li>
+                    <hr class="opacity-25 my-2">
+                    <li>
+                        <a (click)="modRen.showModal()">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--stylus-fountain-pen-outline-rounded"/></svg>
+                            Rename
+                        </a>
+                    </li>
+                    <li>
+                        <a class="opacity-50" disabled="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--arrow-forward-rounded"/></svg>
+                            Move
+                        </a>
+                    </li>
                     @if (!isRoot) {
-                        <li><a (click)="modDel.showModal()">Delete Folder</a></li>
+                        <li>
+                            <a (click)="modDel.showModal()">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" viewBox="0 0 24 24"><use href="#material-symbols--delete-outline-rounded"/></svg>
+                                Delete
+                            </a>
+                        </li>
                     }
                     @if (g.devMode()) {
                         <hr class="opacity-25 my-2">
