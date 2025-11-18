@@ -170,6 +170,9 @@ public class FolderController {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         long userId = user.getId();
         Folder folder = folderService.getFolder(userId, id);
+        if (folder.getId().equals(folderService.getRootFolder(userId).getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot move root folder");
+        }
         Folder parentFolder = folderService.getFolder(userId, parentId);
         folderService.moveFolder(userId, folder, parentFolder);
         List<Long> notes = noteService.getNotesInFolder(userId, folder).stream().map(Note::getId).toList();
