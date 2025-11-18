@@ -1,5 +1,4 @@
-@import "tailwindcss";
-@plugin "daisyui";
+@reference "../../../styles.css";
 
 .folder-btn {
     @apply opacity-20 transition-opacity;
@@ -10,7 +9,16 @@
     @apply opacity-100;
 }
 
+@keyframes focus {
+    from {
+        outline-offset: 0.4rem;
+        outline-color: transparent;
+    }
+}
+
 .dropping {
+    animation: focus 200ms;
+    z-index: 5;
     @apply outline-2 -outline-offset-1 outline-primary;
 }
 
@@ -20,3 +28,4 @@
 .dragging {
     @apply bg-gray-300 dark:bg-gray-700  scale-95;
 }
+
