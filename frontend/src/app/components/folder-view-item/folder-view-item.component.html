@@ -19,7 +19,11 @@
                     }
                 }
 
-                {{ folderName }}
+                if (folderName) {
+                    {{ folderName }}
+                } @else {
+                    Note: {{ folderID }}
+                }
 
             </a>
 
