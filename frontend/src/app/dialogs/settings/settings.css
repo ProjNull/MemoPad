@@ -1,0 +1,5 @@
+@reference "../../../styles.css";
+
+.option-line {
+    @apply flex my-2 justify-between items-center
+}

@@ -1,0 +1,50 @@
+
+<app-main-loader [is-loading]="isMainLoading"></app-main-loader>
+
+
+<app-side-bar #sidebar>
+    <div navbar>
+        <button class="btn btn-neutral md:hidden" (click)="sidebar.open()">Open</button>
+    </div>
+    <div content>
+
+        content here
+        <button class="btn md:hidden" (click)="sidebar.open()">Open</button>
+    </div>
+    <div sidebar class="flex flex-col grow">
+        <div class="flex justify-between gap-2">
+            <button [cdkMenuTriggerFor]="accountMenu" class="btn btn-ghost border border-neutral grow flex items-center gap-2 px-1">
+                <div class="avatar">
+                    <div class="rounded-full w-8">
+                        <img src="https://gradvatar.com/Jan" />
+                    </div>
+                </div>
+                <span class="font-bold grow text-left">Jan</span>
+            </button>
+
+            <ng-template #accountMenu>
+                <ul class="bg-base-300 menu m-1 rounded-box menu-anim" cdkMenu>
+                    <li cdkMenuItem><button>Rename</button></li>
+                    <li cdkMenuItem (click)="openSettings()"><button>Settings</button></li>
+                    <li cdkMenuItem><button>Logout</button></li>
+                </ul>
+            </ng-template>
+            <div>
+                <button class="btn btn-neutral btn-circle" (click)="openSettings()"><iconify-icon icon="bi:gear" width="16" height="16"></iconify-icon></button>
+                <button class="btn btn-neutral btn-circle md:hidden"(click)="sidebar.close()"><iconify-icon icon="bi:x-lg"></iconify-icon></button>
+            </div>
+        </div>
+
+        <div class="grow">
+            s
+        </div>
+        <div>
+            <button class="btn btn-outline btn-primary w-full flex " (click)="sync()">
+                <span class="grow text-left">Sync</span>
+                @if (isSyncing) {
+                    <iconify-icon icon="line-md:loading-loop" width="24" height="24"></iconify-icon>
+                }
+            </button>
+        </div>
+    </div>
+</app-side-bar>

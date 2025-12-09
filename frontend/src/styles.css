@@ -1,9 +1,103 @@
+/* You can add global styles to this file, and also import other style files */
+@import '@angular/cdk/overlay-prebuilt.css';
 @import "tailwindcss";
 @plugin "daisyui";
-@plugin "@tailwindcss/typography";
+
+
+@plugin "daisyui/theme" {
+  name: "memopadDark";
+  default: true;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(14% 0 0);
+  --color-base-200: oklch(26% 0 0);
+  --color-base-300: oklch(37% 0 0);
+  --color-base-content: oklch(97% 0 0);
+  --color-primary: #00FF00;
+  --color-primary-content: oklch(0% 0 0);
+  --color-secondary: oklch(60% 0.118 184.704);
+  --color-secondary-content: oklch(98% 0.014 180.72);
+  --color-accent: oklch(62% 0.194 149.214);
+  --color-accent-content: oklch(98% 0.018 155.826);
+  --color-neutral: oklch(37% 0 0);
+  --color-neutral-content: oklch(98% 0 0);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(62% 0.194 149.214);
+  --color-success-content: oklch(98% 0.018 155.826);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 2rem;
+  --radius-field: 2rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+
+@plugin "daisyui/theme" {
+  name: "memopadLight";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: oklch(98% 0.003 247.858);
+  --color-base-200: oklch(96% 0.007 247.896);
+  --color-base-300: oklch(92% 0.013 255.508);
+  --color-base-content: oklch(0% 0 0);
+  --color-primary: #00AA00;
+  --color-primary-content: oklch(0% 0 0);
+  --color-secondary: oklch(60% 0.118 184.704);
+  --color-secondary-content: oklch(98% 0.014 180.72);
+  --color-accent: oklch(62% 0.194 149.214);
+  --color-accent-content: oklch(98% 0.018 155.826);
+  --color-neutral: oklch(86% 0.022 252.894);
+  --color-neutral-content: oklch(12% 0.042 264.695);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(62% 0.194 149.214);
+  --color-success-content: oklch(98% 0.018 155.826);
+  --color-warning: oklch(66% 0.179 58.318);
+  --color-warning-content: oklch(98% 0.022 95.277);
+  --color-error: oklch(58% 0.253 17.585);
+  --color-error-content: oklch(96% 0.015 12.422);
+  --radius-selector: 2rem;
+  --radius-field: 2rem;
+  --radius-box: 2rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+.cdk-dialog-container {
+  animation: cdk-dialog-animation-in 200ms;
+  @apply bg-base-100 border-2 border-base-300 rounded-box p-5 origin-center;
+}
+
+.cdk-dialog-container .dialog-header {
+  @apply flex justify-between items-center gap-2 border-b border-base-200 pb-4 mb-2;
+}
+
+.menu.rounded-box {
+  @apply rounded-3xl;
+}
+
+
+.menu-anim {
+  animation: cdk-dialog-animation-in 200ms;
+}
 
 
 
-.md-content {
-    @apply prose w-full max-w-none dark:prose-invert;
+@keyframes cdk-dialog-animation-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
 }
