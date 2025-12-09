@@ -1,5 +1,5 @@
 export default {
-    baseUrl: "https://memopad.script.projnull.api",
+    baseUrl: "<API URL>",
 
     testUser: {
         username: "test",
