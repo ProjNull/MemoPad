@@ -1,59 +1,46 @@
-# Frontend
+# MemoPad Frontend (VUE)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.1.
+## Project Setup
 
-## Development server
-
-To start a local development server, run:
-
-```bash
-ng serve
+```sh
+pnpm install
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Compile and Hot-Reload for Development
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```sh
+pnpm dev
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+### Type-Check, Compile and Minify for Production
 
-```bash
-ng generate --help
+```sh
+pnpm build
 ```
 
-## Building
+### Updating API Client
 
-To build the project run:
+**NOTE:** This will override old functions in `src/api/` and may break the app!
 
-```bash
-ng build
+#### From Remote Server (Main Instance)
+
+```sh
+pnpm update-api:remote
+```
+#### From Local File
+
+The openAPI spec file must be JSON with name `local.openapi.json`
+
+```sh
+pnpm update-api:local
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+#### Manualy (Directly with `openapi` cli)
 
-## Running unit tests
+You can also use the openapi cli directly but its not recommended as it can break the app quite easily.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+**NOTE:** Include `--useOptions` parameter as thats used internaly.
 
-```bash
-ng test
+```sh
+openapi --input <INPUT FILE/URL> --output ./src/api/ --client fetch --useOptions
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

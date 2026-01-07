@@ -1,8 +1,9 @@
-import { platformBrowser } from '@angular/platform-browser';
-import { AppModule } from './app/app-module';
+import { createApp } from 'vue'
+import App from './App.vue'
+import router from './router'
 
+const app = createApp(App)
 
-platformBrowser().bootstrapModule(AppModule, {
-  
-})
-  .catch(err => console.error(err));
+app.use(router)
+
+app.mount('#app')

@@ -1,8 +1,0 @@
-
-<div class="join">
-
-    @for (variant of variants; track $index) {
-
-        <button class="btn join-item" (click)="g.setTheme(variant.value)" [class.btn-primary]="g.getTheme() == variant.value" >{{variant.label}}</button>
-    }
-</div>

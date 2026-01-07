@@ -1,6 +1,0 @@
-{
-    "/api/": {
-        "target": "https://memopad.script.projnull.eu/",
-        "secure": false
-    }
-}
