@@ -11,11 +11,11 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
-    "update-api:remote": "openapi --input https://memopad.script.projnull.eu/api/docs --output ./src/api/ --client fetch --useOptions",
-    "update-api:local": "openapi --input ./local.openapi.json --output ./src/api/ --client fetch --useOptions",
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "axios": "^1.13.2",
+    "pinia": "^3.0.4",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
