@@ -35,12 +35,12 @@ export default {
       return api.get<API.Responses.UserInfo>("auth/info");
     },
 
-    getRootFolder: (): Promise<API.Responses.FolderInfo> => {
-      return api.get("folders/");
+    getRootFolder: () => {
+      return api.get<API.Responses.FolderInfo>("folders/");
     },
 
-    getFolder: (folderId: number): Promise<API.Responses.FolderInfo> => {
-      return api.get("folders/");
+    getFolder: (folderId: number) => {
+      return api.get<API.Responses.FolderInfo>(`folders/${folderId}`);
     },
     getSubFolders: (parentFolderId: number): Promise<API.Responses.SubFolders> => {
       return api.get(`folders/${parentFolderId}/folders`);
@@ -48,5 +48,7 @@ export default {
     getSubNotes: (parentFolderId: number): Promise<API.Responses.FolderInfo> => {
       return api.get(`folders/${parentFolderId}/notes`);
     }
+
+
 
 }

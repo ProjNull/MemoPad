@@ -2,12 +2,13 @@
 
 import Api from '@/api';
 import { useAuthStore } from './stores/auth';
-import { onMounted, provide, ref, watch } from 'vue';
+import { onMounted, provide, ref, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import FileTree from './components/FileTree/index.vue';
 import Toasts from './components/Toasts.vue';
 import SideBar from './components/SideBar.vue';
 import multiavatar from '@multiavatar/multiavatar/esm'
+import ChangelogCheck from './components/ChangelogCheck.vue';
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -51,6 +52,8 @@ provide("notifications", {
   add: addNotification
 })
 
+
+
 </script>
 
 <template>
@@ -88,6 +91,7 @@ provide("notifications", {
   </div>
 
   <Toasts v-model="notifications"></Toasts>
+  <ChangelogCheck></ChangelogCheck>
 </template>
 
 <style scoped></style>

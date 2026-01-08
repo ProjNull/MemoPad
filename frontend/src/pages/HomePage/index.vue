@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/stores/auth';
-
-
+import { useTemplateRef } from 'vue';
 
 
 </script>
@@ -9,5 +8,6 @@ import { useAuthStore } from '@/stores/auth';
 <template>
 
 U At HOME!
+
 
 </template>
