@@ -1,5 +1,5 @@
 {
-  "name": "t",
+  "name": "memopad",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,17 +14,21 @@
     "type-check": "vue-tsc --build"
   },
   "dependencies": {
+    "@multiavatar/multiavatar": "^1.0.7",
     "axios": "^1.13.2",
     "pinia": "^3.0.4",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },
   "devDependencies": {
+    "@tailwindcss/vite": "^4.1.18",
     "@tsconfig/node24": "^24.0.3",
     "@types/node": "^24.10.4",
     "@vitejs/plugin-vue": "^6.0.3",
     "@vue/tsconfig": "^0.8.1",
+    "daisyui": "^5.5.14",
     "npm-run-all2": "^8.0.4",
+    "tailwindcss": "^4.1.18",
     "typescript": "~5.9.3",
     "vite": "^7.3.0",
     "vite-plugin-vue-devtools": "^8.0.5",

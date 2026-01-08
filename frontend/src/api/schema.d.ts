@@ -17,6 +17,13 @@ declare namespace API {
         }
 
         type SubFolders = FolderInfo[];
+
+
+        type UserInfo = {
+            id: number,
+            username: string,
+            email: string
+        }
     }
 
 
