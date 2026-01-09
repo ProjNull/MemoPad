@@ -32,7 +32,7 @@ function position() {
         pos.y = pos.y-rect.height - 30
     }
 
-    endPos.x = clamp(0,vW - rect.width / 2,pos.x - rect.width / 2);
+    endPos.x = clamp(0,vW - rect.width ,pos.x - rect.width / 2);
     endPos.y = clamp(5,vH - rect.height,pos.y);
     console.log(endPos)
     
