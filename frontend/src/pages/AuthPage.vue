@@ -21,21 +21,18 @@ const repassword = ref("");
 function doAuth() {
 
 
-    var action:Promise<AxiosResponse<API.Responses.UserToken, any, {}>> | null = null;
+    var action:Promise<AxiosResponse<API.UserToken, any, {}>> | null = null;
     if (isLogin.value) {
-        action = Api.login({
+        action = Api.auth.login({
             username: username.value,
             password: password.value
         })
     } else {
         if (password.value != repassword.value) {
-            noti?.add({
-                type: "warn",
-                msg: "Passwords not match!"
-            })
+            noti?.add("Passwords not match!","warn")
             return
         }
-        action = Api.register({
+        action = Api.auth.register({
             username: username.value,
             password: password.value
         })
@@ -57,10 +54,7 @@ function doAuth() {
         if (error.response) {
             msg = error.response?.statusText
         }
-        noti?.add({
-            type: "error",
-            msg
-        })
+        noti?.add(msg,"error")
     }).finally(() => {
         processing.value = false;
         password.value = "";
@@ -69,20 +63,14 @@ function doAuth() {
 
 function getUserInfo() {
     isAfterLogin.value = true;
-    Api.getUserInfo().then((req) =>{
+    Api.auth.getUserInfo().then((req) =>{
         if (req.status == 200) {
             auth.setUser(req.data);
-            noti?.add({
-                type: "success",
-                msg: "Logged in!"
-            })
+            noti?.add("Logged in!","success")
         }
     }).catch((error:AxiosError) => {
         console.log("ERR", error);
-        noti?.add({
-            type: "error",
-            msg: "Failed to Login"
-        })
+        noti?.add("Failed to Login","error")
         auth.logout()
     }).finally(() => {
         isAfterLogin.value = false;

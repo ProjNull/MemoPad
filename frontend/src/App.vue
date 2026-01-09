@@ -5,92 +5,136 @@ import { useAuthStore } from './stores/auth';
 import { onMounted, provide, ref, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import FileTree from './components/FileTree/index.vue';
-import Toasts from './components/Toasts.vue';
+import Toasts from './components/Global/Toasts.vue';
+import ContextMenu from './components/Global/ContextMenu.vue';
 import SideBar from './components/SideBar.vue';
 import multiavatar from '@multiavatar/multiavatar/esm'
 import ChangelogCheck from './components/ChangelogCheck.vue';
+import Modal from './components/Modal.vue';
+import SimpleModal from './components/Global/SimpleModal.vue';
 
 const auth = useAuthStore();
 const router = useRouter();
 
 const showSide = ref(false);
 
+const sidebarEL = useTemplateRef("sidebar");
 
-watch(auth.$state, ({token,user}) => {
-  if (!token || !user) {
+
+const ctxMn = useTemplateRef("ctxMn");
+provide<ContextMenuProvider>("contextmenu", {
+  open: (opt,cl) => ctxMn.value?.open(opt,cl)
+})
+const simpleModal = useTemplateRef("simple-modal");
+provide<SimpleModalProvider>("simple-modal",{
+  ask: (t,p?) => simpleModal.value!.ask(t,p),
+  confirm: (t,m) => simpleModal.value!.confirm(t,m),
+  alert: (t,m) => simpleModal.value!.alert(t,m),
+})
+
+
+function checkLogin() {
+  if (!auth.isLoggedIn) {
     router.push("/auth/")
   } else {
     router.push("/")
   }
+}
+
+watch(auth.$state, () => {
+  checkLogin();
 }, {immediate: true, deep: true});
 
 
 watch(router.currentRoute, (nv) => {
-
   showSide.value = !nv.path.startsWith("/auth")
   
-})
+}, {immediate: true})
 
 
-const notifications = ref<(NotificationDefinition & { id: number })[]>([]);
+const notifications = ref<( { id: number, msg:string,type:NotificationType })[]>([]);
 
 
-function addNotification(d: NotificationDefinition) {
+function addNotification(msg:string,type:NotificationType) {
   const id = Date.now();
-  notifications.value.push({
-    id: id,
-    msg: d.msg,
-    type: d.type
-  })
+  notifications.value.push({id,msg,type})
 
-  setTimeout(() => {
+  const countdown = setTimeout(() => {
     notifications.value = notifications.value.filter(n => n.id != id)
   }, 4000)
+  return {
+    close: () => {
+      clearTimeout(countdown);
+      notifications.value = notifications.value.filter(n => n.id != id)
+    }
+  }
 }
 
 provide("notifications", {
   add: addNotification
 })
 
+const ready = ref(false);
+onMounted(()=> {
+  router.push("/auth/")
+  setTimeout(() => ready.value = true)
+})
 
+const accountMenu:ContextMenuOptions = [
+  {id:"logout",txt:"Logout",ico:"door-closed"}
+]
+
+function accountMenuHandler(id:string) {
+  if (id == "logout") {
+    simpleModal.value?.confirm("Logout?","Really Logout?").then(d => {
+      if (d) {
+        auth.logout();
+      }
+    })
+  }
+}
 
 </script>
 
 <template>
-  <div class="w-full h-screen">
-    <SideBar v-if="showSide">
+  
+  <div v-if="ready" class="w-full h-screen">
+    <SideBar ref="sidebar" v-if="showSide">
       <template v-slot:sidebar>
-        <div class="flex items-center">
-          <h1 class="font-bold grow">Memopad</h1>
-          <button class="btn btn-square md:hidden">
+        <div class="flex items-center px-4 py-4 gap-2">
+          <img class="h-5" src="/assets/icons/color.svg">
+          <h1 class="font-bold grow">
+            Memopad</h1>
+          <button class="btn btn-square md:hidden" @click="sidebarEL?.close()">
             <i class="bi bi-x-lg"></i>
           </button>
         </div>
-        <div class="grow">
-          <FileTree></FileTree>
-        </div>
-        <div class="flex gap-2 items-center">
+       
+        <FileTree></FileTree>
+       
+        <div class="flex gap-2 items-center px-4 py-2">
           <div class="grow flex gap-2 items-center">
 
             <div class="w-8 h-8" :innerHTML="multiavatar(auth.getName())"></div>
             <span>{{ auth.getName() }}</span>
  
           </div>
-          <div class="dropdown dropdown-top dropdown-end">
-            <div tabindex="0" role="button" class="btn btn-square m-1"><i class="bi bi-three-dots-vertical"></i></div>
-            <ul tabindex="-1" class="dropdown-content menu bg-base-100 rounded-box z-1 w-42 p-2 shadow-sm">
-              <li><a @click="auth.logout()">Logout</a></li>
-            </ul>
-          </div>
+          <div @click="ctxMn?.open(accountMenu,accountMenuHandler)" role="button" class="btn btn-square m-1"><i class="bi bi-three-dots-vertical"></i></div>
+
         </div>
       </template>
-      <RouterView></RouterView>
+      <div class="flex flex-col h-full">
+        <RouterView></RouterView>
+      </div>
     </SideBar>
-    <RouterView v-else></RouterView>
+    <div v-else class="flex flex-col h-full">
+        <RouterView></RouterView>
+    </div>
 
   </div>
-
   <Toasts v-model="notifications"></Toasts>
+  <ContextMenu ref="ctxMn"/>
+  <SimpleModal ref="simple-modal"/>
   <ChangelogCheck></ChangelogCheck>
 </template>
 

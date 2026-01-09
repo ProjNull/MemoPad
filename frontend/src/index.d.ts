@@ -1,10 +1,38 @@
-type NotificationDefinition = {
-    type: "info" | "error" | "warn" | "success",
-    msg: string
-}
+type NotificationType = "info" | "error" | "warn" | "success" | "progress"
 
 
 
 type NotificationProvider = {
-    add: (d:NotificationDefinition) => void
+    add: (msg:string,t:NotificationType) => {close:() => void}
+}
+
+type DeleteStatus = {isDeleted?: bool}
+
+type FileTreeProvider = {
+    getRoot: () => HTMLUListElement | null
+    textAsk: (type: string) => Promise<string>
+}
+
+
+type ContextMenuOption = {
+    id: string,
+    txt: string,
+    ico: string
+} | false;
+
+type ContextMenuOptions = ContextMenuOption[];
+type ContextMenuCallback = (id:string) => value;
+
+type ContextMenuProvider = {
+    open(opt:ContextMenuOptions,callback:ContextMenuCallback): void
+}
+
+type SimpleModalProvider = {
+    
+    ask(title: string, placeholder?: string):Promise<text | null> ,
+
+    confirm(title: string,msg:string):Promise<boolean>,
+
+    alert(title: string,msg:string):Promise<void>
+
 }

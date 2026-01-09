@@ -19,6 +19,9 @@ defineModel()
         <div v-else-if="noti.type == 'warn'" class="alert alert-warning">
             <i class="bi bi-exclamation-circle"></i><span>{{ noti.msg }}</span>
         </div>
+        <div v-else-if="noti.type == 'progress'" class="alert alert-info">
+            <span class="loading loading-spinner loading-xs"></span><span>{{ noti.msg }}</span>
+        </div>
         </template>
     </div>
 </template>

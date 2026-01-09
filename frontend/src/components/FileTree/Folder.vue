@@ -1,81 +1,194 @@
 <script setup lang="ts">
 import api from '@/api';
-import { inject, onMounted, ref, useId, useTemplateRef, watch } from 'vue';
+import { computed, inject, onDeactivated, onMounted, ref, useId, useTemplateRef, watch } from 'vue';
+import File from './File.vue';
 
+const treenav = inject<FileTreeProvider>("filetree");
+const noti = inject<NotificationProvider>("notifications");
+const ctmn = inject<ContextMenuProvider>("contextmenu");
+const smdal = inject<SimpleModalProvider>("simple-modal");
 
 const props = defineProps<{
-    id: number
+    folder: API.FolderInfo & DeleteStatus,
+    isRoot?:boolean
 }>()
 
 
 
-const contextMenuElement = useTemplateRef("context-menu")
-
-const name = ref("");
+const folderElement = useTemplateRef("folder")
 
 
-const folders = ref<number[]>([]); 
+const name = ref<string | undefined>(undefined);
 
+const dummyItems = ref<number>(0); 
+const folders = ref<API.SubFolders | undefined>(undefined); 
+const notes = ref<API.SubNotes | undefined>(undefined); 
 const isFolderOpen = ref(false);
-const isContextOpen = ref(false);
 
-function contextMenu(e:Event) {
-    isContextOpen.value = true;
+function loadFolder() {
+    if (notes.value == undefined) {
+        api.folders.getSubNotes(props.folder.id).then((req) => {
+            notes.value = req.data 
+            dummyItems.value -= props.folder.noteIds.length
+        })
+    }
+    if (folders.value == undefined) {
+        api.folders.getSubFolders(props.folder.id).then((req) => {
+            folders.value = req.data
+            dummyItems.value -= props.folder.subFolderIds.length
+        })
+    }
 
 }
 
-function closeContextMenu(e:Event) {
-    isContextOpen.value = false;
-}
+
 
 onMounted(() => {
-    document.addEventListener("click",closeContextMenu)
-    console.log(props.id);
-    api.getFolder(props.id).then((req) => {
-        name.value = req.data.name  
-        folders.value = req.data.subFolderIds 
-    })
+    dummyItems.value = props.folder.subFolderIds.length + props.folder.noteIds.length
+    if (props.isRoot) {
+        loadFolder();
+    }
+})
+
+async function createNote() {
+    const name = await smdal?.ask("Create note");
+    if (name != null) {
+        const n = noti?.add("Creating...","progress");
+        api.notes.create(props.folder.id, name)
+        .then((res) => {
+            if (res.status == 200) {
+                n?.close()
+                noti?.add("Created!","success")
+                
+                if (notes.value == undefined) return;
+                notes.value.push(res.data);   
+            }
+        })
+    }
+}
+
+async function createFolder() {
+    const name = await smdal?.ask("Create folder","Name");
+    if (name != null) {
+        const n = noti?.add("Creating...","progress")
+        api.folders.create(props.folder.id, name)
+        .then((res) => {
+            if (res.status == 200) {
+                n?.close()
+                noti?.add("Created!","success")
+                
+                if (folders.value == undefined) return;
+                folders.value.push(res.data);   
+            }
+        })
+    }
+}
+
+async function renameFolder() {
+    const name = await smdal?.ask("Rename","New name");
+    if (name) {
+        api.folders.rename(props.folder.id,name).then((res) => {
+            noti?.add("Renamed!","success");
+            props.folder.name = res.data.name
+        })
+    }
+}
+
+async function deleteFolder() {
+    const conf = await smdal?.confirm("Delete?","Delete this folder?");
+    if (conf) {
+        api.folders.delete(props.folder.id).then((res) => {
+            noti?.add("Deleted!","success");
+            props.folder.isDeleted = true
+        })
+    }
+}
+
+const menuOtions = computed<ContextMenuOptions>(() => {
+    var base:ContextMenuOptions = [
+        {id: "newNote", txt: "New Note", ico: "file-earmark-richtext"},
+        {id: "newFolder", txt: "New Folder", ico: "folder2"}
+    ]
+    if (!props.isRoot) {
+        base.push(false);
+        base.push({id: "rename", txt: "Rename", ico: "pencil"})
+        base.push({id: "move", txt: "Move", ico: "arrows-move"})
+        base.push({id: "delete", txt: "Delete", ico: "trash"})
+    }
+    return base
+})
+
+function handleCTMN(selected:string) {
+    switch(selected) {
+        case "newNote": return createNote();
+        case "newFolder": return createFolder();
+        case "rename": return renameFolder();
+        case "delete": return deleteFolder();
+    }
+}
+
+const sortedFolders = computed(()=> {
+    if (folders.value == undefined) return undefined;
+    return folders.value.sort((a,b) => a.name.localeCompare(b.name))
 })
 
 
-async function getSubFolders() {
-    return api.getSubFolders(props.id)
-}
+const sortedNotes = computed(()=> {
+    if (notes.value == undefined) return undefined;
+    return notes.value.sort((a,b) => a.title.localeCompare(b.title))
+})
 
-const id = useId();
 </script>
 
 <template>
-    <li>
+    <li v-if="!folder.isDeleted">
         <div
-            class="flex relative folder"
-            @click.stop="isFolderOpen = !isFolderOpen"
-            >
-   
-            <i v-if="isFolderOpen" class="bi bi-chevron-down"></i>
-            <i v-else class="bi bi-chevron-right"></i>
+            
+            ref="folder"
+            class="flex relative folder p-0 pr-2"
+            @contextmenu.prevent="ctmn?.open(menuOtions,handleCTMN)"
+        >
+            <div class="grow flex gap-2 p-2" @click="isFolderOpen = !isFolderOpen;loadFolder()">
+                <i v-if="isRoot" class="bi"></i>
+                <i v-else-if="isFolderOpen" class="bi bi-chevron-down"></i>
+                <i v-else class="bi bi-chevron-right"></i>
+                <span v-if="folder.name" >{{ folder.name }}</span>
+            </div>
+            
         
             
 
-            <span v-if="name" class="grow">{{ name }}</span>
-            <div v-else class="skeleton h-3 grow"></div>
-
-            <div @click.stop="contextMenu" role="button" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></div>
             
-            <ul v-if="isContextOpen" @click.stop="" tabindex="-1" class="absolute right-0 top-full menu bg-base-100 rounded-box z-1 w-42 p-2 shadow-sm">
-                <li><a>New Note</a></li>
-                <li><a>Item 2</a></li>
-            </ul>
+
+
+            <div @click="ctmn?.open(menuOtions,handleCTMN)" role="button" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></div>
+            
+
         </div>
 
         
-        <ul class="menu-dropdown" :class="{'menu-dropdown-show': isFolderOpen}">
-            <template v-if="isFolderOpen">
-                <template v-for="folderID in folders">
-                    <Folder :id="folderID">
+        <ul class="menu-dropdown" :class="{'menu-dropdown-show': isFolderOpen || isRoot}">
+            
+
+            <template v-if="isFolderOpen || isRoot">
+                <template v-for="el in sortedFolders">
+                    <Folder :folder="el">
                     </Folder>
                 </template>
+                
+                <template v-for="el in sortedNotes">
+                    <File :note="el">
+                    </File>
+                </template>
             </template>
+
+            <template v-if="dummyItems > 0" v-for="d in dummyItems">
+                <li><div class="flex">
+                    <span class="skeleton opacity-50 p-2 w-20" :style="{width: (20 +Math.random() * 50)+'%'}"></span>
+
+                </div></li>
+            </template>
+
         </ul>
     </li>
 </template>

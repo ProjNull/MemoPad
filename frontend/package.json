@@ -16,7 +16,9 @@
   "dependencies": {
     "@multiavatar/multiavatar": "^1.0.7",
     "axios": "^1.13.2",
+    "marked": "^17.0.1",
     "pinia": "^3.0.4",
+    "vanjs-core": "^1.6.0",
     "vue": "^3.5.26",
     "vue-router": "^4.6.4"
   },

@@ -3,7 +3,7 @@ import { defineStore } from 'pinia'
 
 export interface AuthState {
   token: string | null
-  user: API.Responses.UserInfo | null
+  user: API.UserInfo | null
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -13,7 +13,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isLoggedIn: (state) => !!state.token && !!state.user,
   },
 
   actions: {
@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
       return this.token;
     },
 
-    setUser(user: API.Responses.UserInfo) {
+    setUser(user: API.UserInfo) {
       this.user = user
     },
 

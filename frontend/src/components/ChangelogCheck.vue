@@ -9,6 +9,7 @@ const content = ref("");
 const title = ref("");
 
 onMounted(() => {
+    
     changelogAPI.isLatest().then((d) => {
         if (d) {
             modal.value?.open();
