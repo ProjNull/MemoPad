@@ -2,9 +2,11 @@
 import api from '@/api';
 import { useGlobalState } from '@/stores/global';
 import { inject, onMounted, ref } from 'vue';
+import type { SideBarProvider } from '../SideBar.vue';
 const ctmn = inject<ContextMenuProvider>("contextmenu");
 const noti = inject<NotificationProvider>("notifications");
 const smdal = inject<SimpleModalProvider>("simple-modal");
+const sidebar = inject<SideBarProvider>("sidebar")
 
 
 
@@ -54,6 +56,7 @@ function openNote() {
     const n = noti?.add("Opening...","progress");
     api.notes.get(props.note.id).then((res) => {
         n?.close();
+        sidebar?.close()
         global.setOpenNote(res.data);
     })
 }

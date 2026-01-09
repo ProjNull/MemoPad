@@ -27,7 +27,7 @@ defineExpose({
 </script>
 
 <template>
-    <div class="drawer md:drawer-open">
+    <div class="drawer md:drawer-open h-full">
         <input type="checkbox" class="drawer-toggle" v-model="isOpen" />
         <div class="drawer-content">
             <slot></slot>

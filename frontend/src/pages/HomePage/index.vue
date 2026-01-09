@@ -23,7 +23,7 @@ const hasChanges = ref(false);
 <div class="navbar bg-base-100 border-b border-b-base-200 shadow-sm">
   <div class="flex-1">
     <a class="btn btn-ghost btn-square md:hidden" @click="sidebar?.open()"><i class="bi bi-list"></i></a>
-    <span class="text-xl">{{ note?.title ?? "Home" }}</span>
+    <span class="text-xl ml-2">{{ note?.title ?? "Home" }}</span>
   </div>
   <div class="flex-none">
     <button v-if="note" @click="isEdit = !isEdit" class="btn" :class="{'btn-square':!isEdit,'btn-secondary': isEdit && !hasChanges, 'btn-primary': isEdit && hasChanges}">

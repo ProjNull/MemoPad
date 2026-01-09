@@ -12,6 +12,7 @@ const content = computed(() => marked.parse(props.note.content))
 
 </script>
 <template>
+    <h1 class="text-2xl font-bold">{{ note.title }}</h1>
     <div v-if="!props.note.content" class="text-center mt-8">
         No Content
     </div>

@@ -98,7 +98,7 @@ function accountMenuHandler(id:string) {
 
 <template>
   
-  <div v-if="ready" class="w-full h-screen">
+  <div v-if="ready" class="w-full h-svh">
     <SideBar ref="sidebar" v-if="showSide">
       <template v-slot:sidebar>
         <div class="flex items-center px-4 py-4 gap-2">
