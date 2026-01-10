@@ -30,7 +30,11 @@ async function renameNote() {
     if (name) {
         api.notes.rename(props.note.id,name).then((res) => {
             noti?.add("Renamed!","success");
-            props.note.title = res.data.title
+            props.note.title = res.data.title;
+            
+            if (global.isCurrentOpenNote(props.note.id)) {
+                global.setOpenNoteTitle(res.data.title);
+            }
         })
     }
 }
@@ -41,6 +45,9 @@ async function deleteNote() {
         api.notes.delete(props.note.id).then((res) => {
             noti?.add("Deleted!","success");
             props.note.isDeleted = true
+            if (global.isCurrentOpenNote(props.note.id)) {
+                global.clearOpenNote();
+            }
         })
     }
 }

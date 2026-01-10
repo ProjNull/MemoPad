@@ -171,12 +171,12 @@ const sortedNotes = computed(()=> {
             
 
             <template v-if="isFolderOpen || isRoot">
-                <template v-for="el in sortedFolders">
+                <template v-for="el in sortedFolders" :key="el.id">
                     <Folder :folder="el">
                     </Folder>
                 </template>
                 
-                <template v-for="el in sortedNotes">
+                <template v-for="el in sortedNotes"  :key="el.id">
                     <File :note="el">
                     </File>
                 </template>

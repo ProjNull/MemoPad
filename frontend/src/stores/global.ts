@@ -19,9 +19,20 @@ export const useGlobalState = defineStore('global', {
     setOpenNote(note:API.NoteInfo) {
       this.openNote = note
     },
+    setOpenNoteTitle(title:string) {
+      if (this.openNote) {
+        this.openNote.title = title;
+      }
+    },
     clearOpenNote() {
       this.openNote = null
     },
+    isCurrentOpenNote(id:number) {
+      if (this.openNote) {
+        return this.openNote.id == id;
+      }
+      return false;
+    }
   }
 })
 
