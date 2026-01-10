@@ -1,21 +1,26 @@
 import { defineStore } from 'pinia'
 
-
 export interface GlobalState {
-  openNote: API.NoteInfo | null
+  openNote: API.NoteInfo | null,
+  isEditing: boolean
 }
 
 export const useGlobalState = defineStore('global', {
   state: (): GlobalState => ({
     openNote: null,
+    isEditing: false
   }),
 
   getters: {
     getOpenNote: (state) => state.openNote,
-    hasOpenNote: (state) => !!state.openNote
+    hasOpenNote: (state) => !!state.openNote,
+    getEditingState: (state) => state.isEditing
   },
 
   actions: {
+    setEditing(v:boolean) {
+      this.isEditing = v
+    },
     setOpenNote(note:API.NoteInfo) {
       this.openNote = note
     },

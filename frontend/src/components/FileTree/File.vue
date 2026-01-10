@@ -61,7 +61,15 @@ function handleCTMN(selected:string) {
     }
 }
 
-function openNote() {
+async function openNote() {
+    if (global.isCurrentOpenNote(props.note.id)) return;
+
+    if (global.hasOpenNote && global.getEditingState) {
+        const open = await smdal?.confirm("Open?","You are currently editing a different note?\nReally open?");
+        if (!open) return;
+    }
+
+
     const n = noti?.add("Opening...","progress");
     api.notes.get(props.note.id).then((res) => {
         n?.close();

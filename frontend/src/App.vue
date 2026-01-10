@@ -2,7 +2,7 @@
 
 import Api from '@/api';
 import { useAuthStore } from './stores/auth';
-import { onMounted, provide, ref, useTemplateRef, watch } from 'vue';
+import { onMounted, onUnmounted, provide, ref, useTemplateRef, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import FileTree from './components/FileTree/index.vue';
 import Toasts from './components/Global/Toasts.vue';
@@ -12,6 +12,8 @@ import multiavatar from '@multiavatar/multiavatar/esm'
 import ChangelogCheck from './components/ChangelogCheck.vue';
 import Modal from './components/Modal.vue';
 import SimpleModal from './components/Global/SimpleModal.vue';
+import AboutModal from './components/modals/AboutModal.vue';
+import Shortcuts from './components/modals/ShortcutsModal.vue';
 
 const auth = useAuthStore();
 const router = useRouter();
@@ -19,6 +21,8 @@ const router = useRouter();
 const showSide = ref(false);
 
 const sidebarEL = useTemplateRef("sidebar");
+const aboutModal = useTemplateRef("about-modal");
+const shortcutsModal = useTemplateRef("shortcuts-modal");
 
 
 const ctxMn = useTemplateRef("ctxMn");
@@ -76,12 +80,15 @@ provide("notifications", {
 
 const ready = ref(false);
 onMounted(()=> {
+  document.addEventListener("keydown", detectHelpKey);
   router.push("/auth/")
   setTimeout(() => ready.value = true)
 })
 
 const accountMenu:ContextMenuOptions = [
-  {id:"logout",txt:"Logout",ico:"door-closed"}
+  {id:"about",txt:"About",ico:"info-circle"},
+  {id:"shortcuts",txt:"Shortcuts (Ctrl+K)",ico:"command"},
+  {id:"logout",txt:"Logout",ico:"door-closed"},
 ]
 
 function accountMenuHandler(id:string) {
@@ -91,6 +98,20 @@ function accountMenuHandler(id:string) {
         auth.logout();
       }
     })
+  } else if (id == "about") {
+    aboutModal.value?.open()
+  } else if (id == "shortcuts") {
+    shortcutsModal.value?.open()
+  }
+}
+
+
+function detectHelpKey(e:KeyboardEvent) {
+  if (showSide.value) {
+    if (e.key == "H" && e.ctrlKey && e.shiftKey) {
+      e.preventDefault()
+      shortcutsModal.value?.open()
+    }
   }
 }
 
@@ -133,9 +154,13 @@ function accountMenuHandler(id:string) {
 
   </div>
   <Toasts v-model="notifications"></Toasts>
-  <ContextMenu ref="ctxMn"/>
-  <SimpleModal ref="simple-modal"/>
+  
+  
+  <AboutModal ref="about-modal"></AboutModal>
+  <Shortcuts ref="shortcuts-modal"/>
   <ChangelogCheck></ChangelogCheck>
+  <SimpleModal ref="simple-modal"/>
+  <ContextMenu ref="ctxMn"/>
 </template>
 
 <style scoped></style>

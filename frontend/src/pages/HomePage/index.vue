@@ -3,7 +3,7 @@ import api from '@/api';
 import type { SideBarProvider } from '@/components/SideBar.vue';
 import { useAuthStore } from '@/stores/auth';
 import { useGlobalState } from '@/stores/global';
-import { computed, inject, onMounted, ref, useTemplateRef, watch } from 'vue';
+import { computed, inject, onMounted, onUnmounted, ref, useTemplateRef, watch } from 'vue';
 
 const noti = inject<NotificationProvider>("notifications");
 import { marked } from 'marked';
@@ -15,10 +15,10 @@ const auth = useAuthStore();
 
 const note = computed(() => global.getOpenNote)
 
+const textEdit = useTemplateRef("textedit");
+
 const title = ref("");
-
 const content = ref("");
-
 const isEdit = ref(false);
 const processing = ref(false);
 const hasChanges = computed(() => content.value != note.value?.content || title.value != note.value.title);
@@ -31,12 +31,17 @@ watch(content, async (v) =>{
 
 
 
-watch(note, (n)  => {
+watch(note, (n,o)  => {
     if (!n) return;
+
+    if (o && n.id != o.id) isEdit.value = false;
     content.value = n.content
     title.value = n.title
 },{immediate: true})
 
+watch(isEdit,(v) => {
+    global.setEditing(v);
+},{immediate:true})
 
 async function saveChanges() {
     if (!note.value) return;
@@ -73,14 +78,58 @@ async function saveChanges() {
 }
 
 function toggleEdit() {
+    if (!note.value) return;
     if (isEdit.value && hasChanges.value) {
         saveChanges().then((r) => {
             if (r) isEdit.value = false;
         });
     } else {
         isEdit.value = !isEdit.value
+        setTimeout(()=> {
+            if (textEdit.value) {
+                textEdit.value.focus();
+            }
+        })
     }
 }
+
+
+function tabPrevent(e:KeyboardEvent) {
+    if (!e.target) return;
+    const el = e.target as HTMLTextAreaElement
+    if (e.key == "Tab") {
+        
+        e.preventDefault()
+        if (!e.altKey && !e.ctrlKey && !e.shiftKey) {
+            const start = el.selectionStart;
+            const end = el.selectionEnd;
+
+            const value = el.value;
+            el.setRangeText("\t", start, end, "end");
+        }
+    }
+
+    if (e.key == "s" && e.ctrlKey) {
+        e.preventDefault();
+        saveChanges();
+    }
+}
+
+function shortcuts(e:KeyboardEvent) {
+    if (e.key == "e" && e.ctrlKey) {
+        e.preventDefault();
+        toggleEdit()
+    }
+    
+}
+
+onMounted(() => {
+    document.addEventListener("keydown",shortcuts);
+})
+
+onUnmounted(() => {
+    document.removeEventListener("keydown",shortcuts);
+})
 
 </script>
 
@@ -108,17 +157,22 @@ function toggleEdit() {
   </div>
 </div>
 
-<div class="w-full mx-auto max-w-[120ch] grow p-2 flex flex-col" v-if="note">
+<div class="w-full mx-auto max-w-[120ch] grow flex flex-col" v-if="note">
 
     <template v-if="isEdit">
+        <div class=" px-2 grow">
         <!--<input class="input w-full text-2xl font-black mt-4" v-model="title" :placeholder="note.title">
         <div class="divider my-0"></div>-->
-        <textarea class="w-full font-mono textarea grow h-full resize-none rounded-box p-4 overflow-y-auto focus:outline-2 focus:outline-primary" v-model="content"></textarea>
+            <textarea ref="textedit" @keydown="tabPrevent" class="w-full bg-base-200/20 font-mono textarea grow h-full resize-none rounded-none border-y-0 p-2 py-4 overflow-y-auto focus:outline-0 border-base-200 focus:border-base-200" v-model="content"></textarea>
+        </div>
     </template>
     <template v-else>
         <!--<h1 class="text-4xl font-black mt-4">{{ note.title }}</h1>
         <div class="divider"></div>-->
-        <div :innerHTML="contentHTML" class="prose prose-invert prose-sm">
+        <div v-if="!content || content.trim().length == 0" class=" p-2 text-center">
+            No Content
+        </div>
+        <div v-else :innerHTML="contentHTML" class="prose prose-invert prose-sm overflow-y-auto grow p-4 basis-0">
 
         </div>
    

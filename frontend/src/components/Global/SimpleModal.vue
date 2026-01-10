@@ -82,10 +82,10 @@ defineExpose<SimpleModalProvider>({
 
 <template>
     <template v-for="m in modals">
-        <Modal auto-open class="w-80" ref="modal">
+        <Modal auto-open class="w-full max-w-100" ref="modal">
             <h1 class="text-2xl font-bold mb-4">{{ m.title }}</h1>
             <template v-if="m.type == 'alert'">
-                <p>{{ m.value }}</p>
+                <p :innerText="m.value"></p>
 
                 <div class="modal-action flex gap-2 mt-4">
                     <button class="btn btn-primary basis-0 grow" default-focus ref="focus-this" @click="m.resolve(null)">OK</button>
@@ -107,7 +107,7 @@ defineExpose<SimpleModalProvider>({
             </template>
 
             <template v-if="m.type == 'confirm'">
-                <p>{{ m.value }}</p>
+                <p :innerText="m.value"></p>
 
                 <div class="modal-action flex gap-2 mt-4">
                     <button class="btn btn-secondary btn-outline basis-0 grow" @click="m.resolve(false)">No</button>
