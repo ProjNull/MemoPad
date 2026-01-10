@@ -34,7 +34,6 @@ function open() {
 
 function close(data?:unknown) {
     emit("closed",data);
-    modal.value?.close();
     showModal.value = false
 }
 
