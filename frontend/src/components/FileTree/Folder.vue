@@ -122,6 +122,7 @@ function handleCTMN(selected:string) {
     switch(selected) {
         case "newNote": return createNote();
         case "newFolder": return createFolder();
+        case "move": return smdal?.alert("WIP","Not yet Implemented")
         case "rename": return renameFolder();
         case "delete": return deleteFolder();
     }

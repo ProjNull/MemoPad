@@ -21,6 +21,7 @@ const treenav = inject<FileTreeProvider>("filetree");
 
 const menuOtions:ContextMenuOptions = [
     {id: "rename", txt: "Rename", ico: "pencil"},
+    {id: "move", txt: "Move", ico: "arrows-move"},
     {id: "delete", txt: "Delete", ico: "trash"}
 ]
 
@@ -55,6 +56,7 @@ async function deleteNote() {
 function handleCTMN(selected:string) {
     switch(selected) {
         case "rename": return renameNote()
+        case "move": return smdal?.alert("WIP","Not yet Implemented")
         case "delete": return deleteNote()
     }
 }
