@@ -106,13 +106,13 @@ function toggleEdit() {
 <div class="w-full mx-auto max-w-[120ch] grow p-2 flex flex-col" v-if="note">
 
     <template v-if="isEdit">
-        <input class="input w-full text-2xl font-black mt-4" v-model="title" :placeholder="note.title">
-        <div class="divider my-0"></div>
+        <!--<input class="input w-full text-2xl font-black mt-4" v-model="title" :placeholder="note.title">
+        <div class="divider my-0"></div>-->
         <textarea class="w-full font-mono textarea grow h-full resize-none rounded-box p-4 overflow-y-auto focus:outline-2 focus:outline-primary" v-model="content"></textarea>
     </template>
     <template v-else>
-        <h1 class="text-4xl font-black mt-4">{{ note.title }}</h1>
-        <div class="divider"></div>
+        <!--<h1 class="text-4xl font-black mt-4">{{ note.title }}</h1>
+        <div class="divider"></div>-->
         <div :innerHTML="contentHTML" class="prose prose-invert prose-sm">
 
         </div>

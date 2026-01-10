@@ -33,7 +33,7 @@ async function renameNote() {
             props.note.title = res.data.title;
             
             if (global.isCurrentOpenNote(props.note.id)) {
-                global.setOpenNoteTitle(res.data.title);
+                global.setOpenNote(res.data);
             }
         })
     }
