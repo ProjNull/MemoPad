@@ -147,7 +147,7 @@ onUnmounted(() => {
     <span class="text-xl block mx-2 text-ellipsis text-nowrap overflow-x-hidden min-w-0 grow shrink">{{ note?.title ?? "Home" }}</span>
   </div>
   <!-- <div class="flex-none hidden md:block"> -->
-  <div class="flex-none hidden md:block">
+  <div class="flex-none">
     <template v-if="note">
 
         <button v-if="processing" disabled class="btn btn-primary btn-square text-primary">
