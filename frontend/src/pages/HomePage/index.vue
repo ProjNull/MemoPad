@@ -92,14 +92,19 @@ function toggleEdit() {
     <span class="text-xl ml-2">{{ note?.title ?? "Home" }}</span>
   </div>
   <div class="flex-none">
-    <button v-if="note && processing" disabled class="btn btn-primary btn-square text-primary">
-        <span class="loading loading-spinner loading-sm"></span>
-    </button>
-    <button v-if="note && !processing" @click="toggleEdit()" class="btn" :class="{'btn-square':!isEdit,'btn-secondary': isEdit && !hasChanges, 'btn-primary': isEdit && hasChanges}">
-        <i v-if="!isEdit" class="bi-pencil"></i>
-        <i v-else aria-label="disabled" class="bi-floppy"></i>
-        <span v-if="isEdit">Save</span>
-    </button>
+    <template v-if="note">
+
+        <button v-if="processing" disabled class="btn btn-primary btn-square text-primary">
+            <span class="loading loading-spinner loading-sm"></span>
+        </button>
+        <button v-else-if="isEdit" @click="toggleEdit()" class="btn" :class="{'btn-secondary': !hasChanges, 'btn-primary': hasChanges}">
+            <i aria-label="disabled" class="bi-floppy"></i>
+            <span>Save</span>
+        </button>
+        <button v-else @click="toggleEdit()" class="btn btn-square">
+            <i class="bi-pencil"></i>
+        </button>
+    </template>
   </div>
 </div>
 

@@ -185,7 +185,7 @@ const sortedNotes = computed(()=> {
 
             <template v-if="dummyItems > 0" v-for="d in dummyItems">
                 <li><div class="flex">
-                    <span class="skeleton opacity-50 p-2 w-20" :style="{width: (20 +Math.random() * 50)+'%'}"></span>
+                    <span class="skeleton opacity-50 p-2 m-1 w-20" :style="{width: (40 +Math.random() * 20)+'%'}"></span>
 
                 </div></li>
             </template>
