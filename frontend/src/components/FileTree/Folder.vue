@@ -142,18 +142,17 @@ const sortedNotes = computed(()=> {
 </script>
 
 <template>
-    <li v-if="!folder.isDeleted">
-        <div
-            
+    <li v-if="!folder.isDeleted" class="ml-1">
+        <div 
             ref="folder"
-            class="flex relative folder p-0 pr-2"
+            class="flex basis-0 w-full grow-0 box-border  min-w-0 relative folder p-0 pr-2"
             @contextmenu.prevent="ctmn?.open(menuOtions,handleCTMN)"
         >
-            <div class="grow flex gap-2 p-2" @click="isFolderOpen = !isFolderOpen;loadFolder()">
+            <div class="grow flex gap-2 p-2 basis-0 min-w-0" @click="isFolderOpen = !isFolderOpen;loadFolder()">
                 <i v-if="isRoot" class="bi"></i>
                 <i v-else-if="isFolderOpen" class="bi bi-chevron-down"></i>
                 <i v-else class="bi bi-chevron-right"></i>
-                <span v-if="folder.name" >{{ folder.name }}</span>
+                <span v-if="folder.name" class="grow min-w-0 text-ellipsis text-nowrap overflow-x-hidden shrink basis-0" >{{ folder.name }}</span>
             </div>
             
         
@@ -168,7 +167,7 @@ const sortedNotes = computed(()=> {
         </div>
 
         
-        <ul class="menu-dropdown" :class="{'menu-dropdown-show': isFolderOpen || isRoot}">
+        <ul class="menu-dropdown ml-0 lg:ml-0.5 w-full box-border" :class="{'menu-dropdown-show': isFolderOpen || isRoot}">
             
 
             <template v-if="isFolderOpen || isRoot">

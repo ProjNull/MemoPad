@@ -73,16 +73,16 @@ function openNote() {
 </script>
 
 <template>
-    <li v-if="!note.isDeleted">
+    <li v-if="!note.isDeleted" class="ml-1">
         <div
             ref="folder"
-            class="flex note relative folder p-0 pr-2"
+            class="flex w-full note relative folder p-0 pr-2 "
             @contextmenu.prevent="ctmn?.open(menuOtions,handleCTMN)"
         >
-            <div class="grow flex gap-2 p-2" @click="openNote()">
+            <div class="grow flex gap-2 p-2 min-w-0 basis-0" @click="openNote()">
                 <i v-if="note.id == global.openNote?.id" class="bi bi-file-earmark-richtext-fill"></i>
                 <i v-else class="bi bi-file-earmark-richtext"></i>
-                <span v-if="note.title" >{{ note.title }}</span>
+                <span v-if="note.title" class="grow block min-w-0 text-ellipsis text-nowrap overflow-x-hidden shrink basis-0" >{{ note.title }}</span>
             </div>
             
         

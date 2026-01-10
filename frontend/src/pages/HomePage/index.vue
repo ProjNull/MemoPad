@@ -86,10 +86,10 @@ function toggleEdit() {
 
 <template>
 
-<div class="navbar bg-base-100 border-b border-b-base-200 shadow-sm">
-  <div class="flex-1">
+<div class="navbar bg-base-100 border-b border-b-base-200 shadow-sm flex-nowrap">
+  <div class="flex-1 flex grow flex-nowrap basis-0 items-center min-w-0">
     <a class="btn btn-ghost btn-square md:hidden" @click="sidebar?.open()"><i class="bi bi-list"></i></a>
-    <span class="text-xl ml-2">{{ note?.title ?? "Home" }}</span>
+    <span class="text-xl block mx-2 text-ellipsis text-nowrap overflow-x-hidden min-w-0 grow shrink">{{ note?.title ?? "Home" }}</span>
   </div>
   <div class="flex-none">
     <template v-if="note">
