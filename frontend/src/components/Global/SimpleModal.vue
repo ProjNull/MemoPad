@@ -5,6 +5,7 @@ import Modal from '../Modal.vue';
 
 
 const modal = useTemplateRef("modal");
+const toFOcus = useTemplateRef("focus-this");
 
 type ModalType = "ask" | "confirm" | "alert"
 
@@ -41,6 +42,16 @@ function open<T>(type:ModalType,title:string,value:string,place?:string) {
         };
 
         modals.value.push(p)
+
+        setTimeout(() => {
+            if (toFOcus.value) {
+                toFOcus.value.forEach(el => {
+                    if (el) {
+                        el.focus()
+                    }
+                })
+            }
+        })
     })
 }
 
@@ -77,14 +88,14 @@ defineExpose<SimpleModalProvider>({
                 <p>{{ m.value }}</p>
 
                 <div class="modal-action flex gap-2 mt-4">
-                    <button class="btn btn-primary basis-0 grow" default-focus @click="m.resolve(null)">OK</button>
+                    <button class="btn btn-primary basis-0 grow" default-focus ref="focus-this" @click="m.resolve(null)">OK</button>
                 </div>
             </template>
 
             <template v-if="m.type == 'ask'" :set>
                 <form action="" method="" @submit.prevent="m.resolve(m.value ?? null)">
                     <label class="input">
-                        <input v-model="m.value" default-focus :placeholder="m.placeholder">
+                        <input ref="focus-this" v-model="m.value" default-focus :placeholder="m.placeholder">
                     </label>
                 </form>
                 <div class="modal-action flex gap-2 mt-4">
@@ -100,7 +111,7 @@ defineExpose<SimpleModalProvider>({
 
                 <div class="modal-action flex gap-2 mt-4">
                     <button class="btn btn-secondary btn-outline basis-0 grow" @click="m.resolve(false)">No</button>
-                    <button class="btn btn-primary basis-0 grow default-focus"  default-focus @click="m.resolve(true)">Yes</button>
+                    <button class="btn btn-primary basis-0 grow default-focus" ref="focus-this" @click="m.resolve(true)">Yes</button>
                 </div>
             </template>
             
