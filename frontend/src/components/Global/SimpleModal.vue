@@ -77,14 +77,14 @@ defineExpose<SimpleModalProvider>({
                 <p>{{ m.value }}</p>
 
                 <div class="modal-action flex gap-2 mt-4">
-                    <button class="btn btn-primary basis-0 grow" @click="m.resolve(null)">OK</button>
+                    <button class="btn btn-primary basis-0 grow" default-focus @click="m.resolve(null)">OK</button>
                 </div>
             </template>
 
             <template v-if="m.type == 'ask'" :set>
                 <form action="" method="" @submit.prevent="m.resolve(m.value ?? null)">
                     <label class="input">
-                        <input v-model="m.value" :placeholder="m.placeholder">
+                        <input v-model="m.value" default-focus :placeholder="m.placeholder">
                     </label>
                 </form>
                 <div class="modal-action flex gap-2 mt-4">
@@ -100,7 +100,7 @@ defineExpose<SimpleModalProvider>({
 
                 <div class="modal-action flex gap-2 mt-4">
                     <button class="btn btn-secondary btn-outline basis-0 grow" @click="m.resolve(false)">No</button>
-                    <button class="btn btn-primary basis-0 grow" @click="m.resolve(true)">Yes</button>
+                    <button class="btn btn-primary basis-0 grow default-focus"  default-focus @click="m.resolve(true)">Yes</button>
                 </div>
             </template>
             

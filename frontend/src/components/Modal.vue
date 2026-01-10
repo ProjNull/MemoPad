@@ -20,9 +20,16 @@ var timeout: undefined | number = undefined;
 
 function open() {
     showModal.value = true
-    setTimeout(() => {
-        modal.value?.showModal();
-    }, 0);
+
+    setTimeout(()=>{
+        if (modal.value) {
+            const tofocus = modal.value.getElementsByTagName("default-focus");
+            for (const el of tofocus) {
+                (el as HTMLElement).focus();
+            }
+            
+        }
+    },0)
 }
 
 function close(data?:unknown) {
@@ -48,9 +55,23 @@ onMounted(() => {
 </script>
 
 <template>
-    <dialog v-if="showModal" ref="modal" class="modal backdrop-blur-xs" >
-        <div class="modal-box border border-base-200" :style="style" :class="class">
+    <div v-if="showModal" ref="modal" class="modal backdrop-blur-xs modal-open " >
+        <div class="modal-box border border-base-200 ms" :style="style" :class="class">
             <slot></slot>
         </div>
-    </dialog>
+    </div>
 </template>
+
+<style lang="css" scoped>
+
+.ms {
+    animation: scaleIN ease-out 200ms;
+}
+
+@keyframes scaleIN {
+    from {
+        opacity: 0;
+        scale: 0.95;
+    }
+}
+</style>
