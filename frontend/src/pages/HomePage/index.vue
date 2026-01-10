@@ -146,7 +146,7 @@ onUnmounted(() => {
     <a class="btn btn-ghost btn-square md:hidden" @click="sidebar?.open()"><i class="bi bi-list"></i></a>
     <span class="text-xl block mx-2 text-ellipsis text-nowrap overflow-x-hidden min-w-0 grow shrink">{{ note?.title ?? "Home" }}</span>
   </div>
-  <div class="flex-none">
+  <div class="flex-none hidden md:block">
     <template v-if="note">
 
         <button v-if="processing" disabled class="btn btn-primary btn-square text-primary">
@@ -166,10 +166,10 @@ onUnmounted(() => {
 <div class="w-full mx-auto max-w-[120ch] grow flex flex-col" v-if="note">
 
     <template v-if="isEdit">
-        <div class=" px-2 grow">
+        <div class="md:px-2 grow">
         <!--<input class="input w-full text-2xl font-black mt-4" v-model="title" :placeholder="note.title">
         <div class="divider my-0"></div>-->
-            <textarea ref="textedit" @keydown="tabPrevent" class="w-full bg-base-200/20 font-mono textarea grow h-full resize-none rounded-none border-y-0 p-2 py-4 overflow-y-auto focus:outline-0 border-base-200 focus:border-base-200" v-model="content"></textarea>
+            <textarea ref="textedit" @keydown="tabPrevent" class="w-full bg-base-200/20 font-mono textarea grow h-full resize-none rounded-none border-0 md:border-x border-y-0 p-2 py-4 overflow-y-auto focus:outline-0 border-base-200 focus:border-base-200" v-model="content"></textarea>
         </div>
     </template>
     <template v-else>
@@ -183,6 +183,21 @@ onUnmounted(() => {
         </div>
    
     </template>
+
+    <div class="fixed bottom-4 right-4 block md:hidden ">
+        <template v-if="note">
+
+            <button v-if="processing" disabled class="btn btn-xl btn-primary btn-square text-primary">
+                <span class="loading loading-spinner loading-sm"></span>
+            </button>
+            <button v-else-if="isEdit" @click="toggleEdit()" class="btn btn-xl btn-square" :class="{'btn-secondary': !hasChanges, 'btn-primary': hasChanges}">
+                <i aria-label="disabled" class="bi-floppy"></i>
+            </button>
+            <button v-else @click="toggleEdit()" class="btn btn-xl btn-square">
+                <i class="bi-pencil"></i>
+            </button>
+        </template>
+    </div>
 
 </div>
 
