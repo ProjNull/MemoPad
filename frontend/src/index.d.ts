@@ -1,9 +1,11 @@
 type NotificationType = "info" | "error" | "warn" | "success" | "progress"
 
 
-
+type NotificationRef= {
+    close:() => void
+}
 type NotificationProvider = {
-    add: (msg:string,t:NotificationType) => {close:() => void}
+    add: (msg:string,t:NotificationType) => NotificationRef
 }
 
 type DeleteStatus = {isDeleted?: bool}

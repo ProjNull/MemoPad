@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, ref, useTemplateRef, type Ref } from 'vue';
 import Modal from '../Modal.vue';
+import { marked } from 'marked';
 
 
 
@@ -29,7 +30,11 @@ var incr = 0
 
 function open<T>(type:ModalType,title:string,value:string,place?:string) {
     console.log("O");
-    return new Promise<T>((resp) => {
+    return new Promise<T>(async (resp) => {
+        if (type != "ask") {
+            value = await marked.parse(value);
+        }
+
         const id = ++incr;
         const p = {
             id,
@@ -41,6 +46,7 @@ function open<T>(type:ModalType,title:string,value:string,place?:string) {
             }
         };
 
+        
         modals.value.push(p)
 
         setTimeout(() => {
@@ -85,7 +91,7 @@ defineExpose<SimpleModalProvider>({
         <Modal auto-open class="w-full max-w-100" ref="modal">
             <h1 class="text-2xl font-bold mb-4">{{ m.title }}</h1>
             <template v-if="m.type == 'alert'">
-                <p :innerText="m.value"></p>
+                <p :innerHTML="m.value"></p>
 
                 <div class="modal-action flex gap-2 mt-4">
                     <button class="btn btn-primary basis-0 grow" default-focus ref="focus-this" @click="m.resolve(null)">OK</button>
@@ -107,7 +113,7 @@ defineExpose<SimpleModalProvider>({
             </template>
 
             <template v-if="m.type == 'confirm'">
-                <p :innerText="m.value"></p>
+                <p :innerHTML="m.value"></p>
 
                 <div class="modal-action flex gap-2 mt-4">
                     <button class="btn btn-secondary btn-outline basis-0 grow" @click="m.resolve(false)">No</button>

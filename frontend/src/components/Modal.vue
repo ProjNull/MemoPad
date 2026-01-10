@@ -64,7 +64,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-if="showModal" ref="modal" class="modal backdrop-blur-xs modal-open " >
+    <div v-if="showModal" ref="modal" class="modal backdrop-blur-xs modal-open z-30" >
         <div class="modal-box border border-base-200 ms" :style="style" :class="class">
             <slot></slot>
         </div>

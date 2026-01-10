@@ -5,7 +5,7 @@ defineModel()
 
 </script>
 <template>
-    <div v-if="modelValue" class="toast">
+    <div v-if="modelValue" class="toast z-20">
         <template v-for="noti in modelValue" :key="noti.id">
         <div v-if="noti.type == 'info'" class="alert alert-info">
             <i class="bi bi-info-circle"></i><span>{{ noti.msg }}</span>

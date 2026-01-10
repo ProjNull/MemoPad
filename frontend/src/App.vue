@@ -59,13 +59,15 @@ watch(router.currentRoute, (nv) => {
 const notifications = ref<( { id: number, msg:string,type:NotificationType })[]>([]);
 
 
-function addNotification(msg:string,type:NotificationType) {
-  const id = Date.now();
+function addNotification(msg:string,type:NotificationType,forceID?:number) {
+  const id = forceID ?? Date.now();
   notifications.value.push({id,msg,type})
-
   const countdown = setTimeout(() => {
     notifications.value = notifications.value.filter(n => n.id != id)
   }, 4000)
+  if (type == "progress") {
+    clearTimeout(countdown);
+  }
   return {
     close: () => {
       clearTimeout(countdown);

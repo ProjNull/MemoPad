@@ -17,8 +17,6 @@ const props = defineProps<{
     note:API.NoteInfo & DeleteStatus
 }>()
 
-const treenav = inject<FileTreeProvider>("filetree");
-
 const menuOtions:ContextMenuOptions = [
     {id: "rename", txt: "Rename", ico: "pencil"},
     {id: "move", txt: "Move", ico: "arrows-move"},
@@ -28,6 +26,8 @@ const menuOtions:ContextMenuOptions = [
 
 async function renameNote() {
     const name = await smdal?.ask("Rename","New name");
+    const prog = noti?.add("Renaming...","progress");
+
     if (name) {
         api.notes.rename(props.note.id,name).then((res) => {
             noti?.add("Renamed!","success");
@@ -36,12 +36,16 @@ async function renameNote() {
             if (global.isCurrentOpenNote(props.note.id)) {
                 global.setOpenNote(res.data);
             }
+        }).finally(() => {
+            prog?.close()
         })
     }
 }
 
 async function deleteNote() {
     const conf = await smdal?.confirm("Delete?","Delete this note?");
+    const prog = noti?.add("Deleting...","progress");
+
     if (conf) {
         api.notes.delete(props.note.id).then((res) => {
             noti?.add("Deleted!","success");
@@ -49,6 +53,8 @@ async function deleteNote() {
             if (global.isCurrentOpenNote(props.note.id)) {
                 global.clearOpenNote();
             }
+        }).finally(() => {
+            prog?.close()
         })
     }
 }
@@ -65,7 +71,7 @@ async function openNote() {
     if (global.isCurrentOpenNote(props.note.id)) return;
 
     if (global.hasOpenNote && global.getEditingState) {
-        const open = await smdal?.confirm("Open?","You are currently editing a different note?\nReally open?");
+        const open = await smdal?.confirm("Really open?","You are currently editing a different note.\n\n This will **NOT** save any changes!");
         if (!open) return;
     }
 

@@ -46,7 +46,7 @@ watch(isEdit,(v) => {
 async function saveChanges() {
     if (!note.value) return;
     processing.value = true;
-
+    const prog =noti?.add("Saving...","progress");
     try {
         if (content.value != note.value?.content) {
             const newContent = await api.notes.edit(note.value.id, content.value);
@@ -65,12 +65,13 @@ async function saveChanges() {
             }
             
         }
+        noti?.add("Saved","success");
         return true
     } catch (error) {
         noti?.add("Failed to save. Try Again.","error");
         return false;
     } finally {
-
+        prog?.close();
         processing.value = false;
         
     }
@@ -109,16 +110,21 @@ function tabPrevent(e:KeyboardEvent) {
         }
     }
 
-    if (e.key == "s" && e.ctrlKey) {
-        e.preventDefault();
-        saveChanges();
-    }
+
 }
 
 function shortcuts(e:KeyboardEvent) {
     if (e.key == "e" && e.ctrlKey) {
         e.preventDefault();
         toggleEdit()
+    }
+
+    if (e.key == "s" && e.ctrlKey) {
+
+        e.preventDefault();
+        if (note.value && isEdit.value) {
+            saveChanges();
+        }
     }
     
 }
