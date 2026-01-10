@@ -2,11 +2,7 @@
 import { onMounted, provide, ref, useTemplateRef } from 'vue';
 import Folder from './Folder.vue';
 import api from '@/api';
-import Modal from '../Modal.vue';
-import CreateModal from './CreateModal.vue';
-import TextAskModal from './TextAskModal.vue';
 
-const textAskModal = useTemplateRef("text-ask-modal")
 
 const rootFolder = ref<API.FolderInfo | null>(null); 
 
@@ -20,14 +16,7 @@ onMounted(() => {
 
 
 provide("filetree",{
-    getRoot: () => rootEl.value,
-    textAsk: async (title:string) => {
-        if (textAskModal.value) {
-        return await textAskModal.value.textAsk(title)
-        } else {
-            return null
-        }
-    }
+    getRoot: () => rootEl.value
 })
 
 
