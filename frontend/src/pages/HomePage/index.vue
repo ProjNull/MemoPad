@@ -114,7 +114,7 @@ function tabPrevent(e:KeyboardEvent) {
 }
 
 function shortcuts(e:KeyboardEvent) {
-    if (e.key == "e" && e.ctrlKey) {
+    if (e.key == "e" && e.ctrlKey && !e.shiftKey) {
         e.preventDefault();
         toggleEdit()
     }

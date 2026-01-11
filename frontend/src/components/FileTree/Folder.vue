@@ -145,15 +145,15 @@ const sortedNotes = computed(()=> {
     <li v-if="!folder.isDeleted" class="ml-1">
         <div 
             ref="folder"
-            class="flex basis-0 w-full grow-0 box-border  min-w-0 relative folder p-0 pr-2"
+            class="flex basis-0 w-full grow-0 box-border  min-w-0 relative folder p-0 pr-2 focus-within:bg-base-300 outline-offset-2 focus-within:outline-2"
             @contextmenu.prevent="ctmn?.open(menuOtions,handleCTMN)"
         >
-            <div class="grow flex gap-2 p-2 basis-0 min-w-0" @click="isFolderOpen = !isFolderOpen;loadFolder()">
+            <button tabindex="1" class="focus:outline-0 text-left grow flex gap-2 p-2 basis-0 min-w-0" @click="isFolderOpen = !isFolderOpen;loadFolder()">
                 <i v-if="isRoot" class="bi"></i>
                 <i v-else-if="isFolderOpen" class="bi bi-chevron-down"></i>
                 <i v-else class="bi bi-chevron-right"></i>
                 <span v-if="folder.name" class="grow min-w-0 text-ellipsis text-nowrap overflow-x-hidden shrink basis-0" >{{ folder.name }}</span>
-            </div>
+            </button>
             
         
             
@@ -161,7 +161,7 @@ const sortedNotes = computed(()=> {
             
 
 
-            <div @click="ctmn?.open(menuOtions,handleCTMN)" role="button" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></div>
+            <button @click="ctmn?.open(menuOtions,handleCTMN,$event.target)" tabindex="1" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></button>
             
 
         </div>

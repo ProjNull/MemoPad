@@ -21,15 +21,13 @@ var timeout: undefined | number = undefined;
 
 function open() {
     showModal.value = true
+    
     document.addEventListener("keydown",detectCloseKey)
 
     setTimeout(()=>{
         if (modal.value) {
-            const tofocus = modal.value.querySelectorAll("default-focus");
-            for (const el of tofocus) {
-                (el as HTMLElement).focus();
-            }
-            
+            modal.value.showModal()
+           
         }
     },0)
 }
@@ -64,11 +62,11 @@ onMounted(() => {
 </script>
 
 <template>
-    <div v-if="showModal" ref="modal" class="modal backdrop-blur-xs modal-open z-30 p-2" >
+    <dialog v-if="showModal" closeby="none" ref="modal" class="modal backdrop-blur-xs z-30 p-2" >
         <div class="modal-box border border-base-200" :style="style" :class="class">
             <slot></slot>
         </div>
-    </div>
+    </dialog>
 </template>
 
 <style lang="css" scoped>

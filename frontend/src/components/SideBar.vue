@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { provide, ref } from 'vue';
+import { onMounted, onUnmounted, provide, ref } from 'vue';
 
 export type SideBarProvider = {
     open: () => void,

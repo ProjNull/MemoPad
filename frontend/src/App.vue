@@ -27,7 +27,7 @@ const shortcutsModal = useTemplateRef("shortcuts-modal");
 
 const ctxMn = useTemplateRef("ctxMn");
 provide<ContextMenuProvider>("contextmenu", {
-  open: (opt,cl) => ctxMn.value?.open(opt,cl)
+  open: (opt,cl,t) => ctxMn.value?.open(opt,cl,t)
 })
 const simpleModal = useTemplateRef("simple-modal");
 provide<SimpleModalProvider>("simple-modal",{
@@ -142,7 +142,7 @@ function detectHelpKey(e:KeyboardEvent) {
             <span>{{ auth.getName() }}</span>
  
           </div>
-          <div @click="ctxMn?.open(accountMenu,accountMenuHandler)" role="button" class="btn btn-square m-1"><i class="bi bi-three-dots-vertical"></i></div>
+          <button @click="ctxMn?.open(accountMenu,accountMenuHandler,$event.currentTarget)" role="button" class="btn btn-square m-1"><i class="bi bi-three-dots-vertical"></i></button>
 
         </div>
       </template>

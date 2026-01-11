@@ -90,14 +90,14 @@ async function openNote() {
     <li v-if="!note.isDeleted" class="ml-1">
         <div
             ref="folder"
-            class="flex w-full note relative folder p-0 pr-2 "
+            class="flex w-full note relative folder p-0 pr-2 focus-within:bg-base-300 outline-offset-2 focus-within:outline-2"
             @contextmenu.prevent="ctmn?.open(menuOtions,handleCTMN)"
         >
-            <div class="grow flex gap-2 p-2 min-w-0 basis-0" @click="openNote()">
+            <button tabindex="1" class="focus:outline-0 text-left grow flex gap-2 p-2 min-w-0 basis-0" @click="openNote()">
                 <i v-if="note.id == global.openNote?.id" class="bi bi-file-earmark-richtext-fill"></i>
                 <i v-else class="bi bi-file-earmark-richtext"></i>
                 <span v-if="note.title" class="grow block min-w-0 text-ellipsis text-nowrap overflow-x-hidden shrink basis-0" >{{ note.title }}</span>
-            </div>
+            </button>
             
         
             
@@ -105,7 +105,7 @@ async function openNote() {
             
 
 
-            <div @click="ctmn?.open(menuOtions,handleCTMN)" role="button" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></div>
+            <button @click="ctmn?.open(menuOtions,handleCTMN,$event.target)" tabindex="1" role="button" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></button>
 
         </div>
 

@@ -28,7 +28,7 @@ const shortcuts:Category[] = [
     ]},
     {name: "General", shortcuts: [
         {keys: ["Ctrl", "K"], desc: "Fuzzy Search", wip: true},
-
+        {keys: ["Ctrl", "Shift","E"], desc: "Focus File Tree", wip: true},
         {keys: ["Ctrl", "Shift","H"], desc: "Show Shortcuts"},
     ]},
     {name: "Modals",shortcuts: [
@@ -50,7 +50,7 @@ const shortcuts:Category[] = [
                 <ul>
                     <template v-for="short in category.shortcuts">
                         <li class="flex items-start gap-2 mb-1 p-2 rounded-field select-none hover:bg-base-200">
-                            <div class="flex gap-1 p-0.5 border border-base-300 rounded-md">
+                            <div class="flex gap-1">
                                 <template v-for="key,index in short.keys">
                                     <kbd class="kbd rounded-sm">{{key}}</kbd>
                                     <span v-if="index < short.keys.length - 1">+</span>

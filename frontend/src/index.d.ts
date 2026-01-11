@@ -26,7 +26,7 @@ type ContextMenuOptions = ContextMenuOption[];
 type ContextMenuCallback = (id:string) => value;
 
 type ContextMenuProvider = {
-    open(opt:ContextMenuOptions,callback:ContextMenuCallback): void
+    open(opt:ContextMenuOptions,callback:ContextMenuCallback,target?:Element | EventTarget | null): void
 }
 
 type SimpleModalProvider = {
@@ -35,6 +35,6 @@ type SimpleModalProvider = {
 
     confirm(title: string,msg:string):Promise<boolean>,
 
-    alert(title: string,msg:string):Promise<void>
+    alert(title: string,msg:string):Promise<null>
 
 }
