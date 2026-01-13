@@ -17,17 +17,10 @@ services:
       - ES_PASSWORD=memopad
     depends_on:
       - postgres
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
-      interval: 10s
-      timeout: 10s
-    volumes:
-      - "./memopad.properties:/memopad/memopad.properties"
-
-  
   # PostgreSQL Database
   postgres:
     image: postgres:latest
+    command: -c 'max_connections=900'
     #container_name: postgres
     restart: always
     environment:

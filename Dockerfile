@@ -3,9 +3,6 @@ FROM node:22.14.0-alpine AS frontend-build
 
 WORKDIR /memopad
 
-# Make sure backend/src/main/resources/static/ exists
-RUN mkdir -p backend/src/main/resources/static
-
 WORKDIR /memopad/frontend
 
 # Install pnpm
@@ -30,7 +27,7 @@ WORKDIR /memopad/backend
 RUN mkdir -p src/main/resources/static
 
 # Copy static directory from frontend stage
-COPY --from=frontend-build /memopad/backend/src/main/resources/static backend/src/main/resources/static
+COPY --from=frontend-build /memopad/frontend/dist backend/src/main/resources/static
 
 # Copy source code
 COPY backend/ ./
