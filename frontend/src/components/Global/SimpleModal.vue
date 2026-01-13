@@ -91,8 +91,8 @@ defineExpose<SimpleModalProvider>({
 
             <template v-if="m.type == 'ask'" :set>
                 <form action="" method="" @submit.prevent="m.resolve(m.value ?? null)">
-                    <label class="input">
-                        <input v-model="m.value" autofocus :placeholder="m.placeholder">
+                    <label class="input w-full">
+                        <input class="w-full min-w-0" v-model="m.value" autofocus :placeholder="m.placeholder">
                     </label>
                 </form>
                 <div class="modal-action flex gap-2 mt-4">

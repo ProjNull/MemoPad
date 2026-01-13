@@ -145,7 +145,7 @@ const sortedNotes = computed(()=> {
     <li v-if="!folder.isDeleted" class="ml-1">
         <div 
             ref="folder"
-            class="flex basis-0 w-full grow-0 box-border  min-w-0 relative folder p-0 pr-2 focus-within:bg-base-300 outline-offset-2 focus-within:outline-2"
+            class="flex basis-0 w-full grow-0 box-border min-w-0 relative folder p-0 pr-2 mr-0 focus-within:bg-base-300 outline-offset-2 focus-within:outline-2"
             @contextmenu.prevent="ctmn?.open(menuOtions,handleCTMN)"
         >
             <button tabindex="1" class="focus:outline-0 text-left grow flex gap-2 p-2 basis-0 min-w-0" @click="isFolderOpen = !isFolderOpen;loadFolder()">
@@ -167,7 +167,7 @@ const sortedNotes = computed(()=> {
         </div>
 
         
-        <ul class="menu-dropdown ml-0 lg:ml-0.5 w-full box-border" :class="{'menu-dropdown-show': isFolderOpen || isRoot}">
+        <ul class="menu-dropdown ml-0 w-full box-border" :class="{'menu-dropdown-show': isFolderOpen || isRoot}">
             
 
             <template v-if="isFolderOpen || isRoot">
