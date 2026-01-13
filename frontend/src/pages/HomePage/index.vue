@@ -179,7 +179,7 @@ onUnmounted(() => {
         <div v-if="!content || content.trim().length == 0" class=" p-2 text-center">
             No Content
         </div>
-        <div v-else :innerHTML="contentHTML" class="prose prose-invert prose-sm overflow-y-auto grow p-4 basis-0">
+        <div v-else :innerHTML="contentHTML" class="prose max-w-full prose-invert prose-sm overflow-y-auto grow p-4 basis-0">
 
         </div>
    
