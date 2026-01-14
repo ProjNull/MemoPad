@@ -84,19 +84,26 @@ provide("notifications", {
 })
 
 const ready = ref(false);
-const serverOffline = ref(false);
+const serverOffline = ref("");
 onMounted(()=> {
+  ready.value = false;
+  serverOffline.value = "";
 
   document.addEventListener("keydown", detectHelpKey);
   router.push("/auth/")
-
   Api.health().then(() => {
     ready.value = true;
-    serverOffline.value = false;
+    serverOffline.value = "";
 
-  }).catch(() => {
+  }).catch((e) => {
     ready.value = false;
-    serverOffline.value = true;
+    serverOffline.value = e.statusText ?? "Unknown";
+
+    if (e.data && e.data.msg) {
+
+      serverOffline.value = e.data.msg;
+    }
+
   })
 })
 
@@ -138,12 +145,14 @@ function reload() {
 </script>
 
 <template>
+ 
   <div v-if="serverOffline" class="w-full h-svh flex flex-col justify-center items-center">
 
-    <i class="bi bi-exclamation-triangle-fill text-5xl text-primary mb-5"></i>
+    <i class="bi bi-cloud-slash-fill text-5xl text-primary mb-5"></i>
     <span class="text-2xl font-bold">Server Offline</span>
     <span >Please check back later.</span>
     <button class="btn btn-xs mt-2" @click="reload()">Reload</button>
+    <span class="fixed bottom-2 left-0 w-full text-center opacity-20 text-xs font-mono">Reason: {{ serverOffline }}</span>
   </div>
   <div v-else-if="ready" class="w-full h-svh">
     <SideBar ref="sidebar" v-if="showSide">
@@ -177,6 +186,12 @@ function reload() {
     <div v-else class="flex flex-col h-full">
         <RouterView></RouterView>
     </div>
+
+  </div>
+  <div v-else class="w-full h-svh flex flex-col justify-center items-center gap-4">
+
+    <span class="loading loading-spinner loading-lg text-primary"></span>
+    <span>Please wait...</span>
 
   </div>
   <Toasts v-model="notifications"></Toasts>
