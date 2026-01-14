@@ -84,10 +84,20 @@ provide("notifications", {
 })
 
 const ready = ref(false);
+const serverOffline = ref(false);
 onMounted(()=> {
+
   document.addEventListener("keydown", detectHelpKey);
   router.push("/auth/")
-  setTimeout(() => ready.value = true)
+
+  Api.health().then(() => {
+    ready.value = true;
+    serverOffline.value = false;
+
+  }).catch(() => {
+    ready.value = false;
+    serverOffline.value = true;
+  })
 })
 
 const accountMenu:ContextMenuOptions = [
@@ -121,11 +131,21 @@ function detectHelpKey(e:KeyboardEvent) {
   }
 }
 
+function reload() {
+  window.location.reload();
+}
+
 </script>
 
 <template>
-  
-  <div v-if="ready" class="w-full h-svh">
+  <div v-if="serverOffline" class="w-full h-svh flex flex-col justify-center items-center">
+
+    <i class="bi bi-exclamation-triangle-fill text-5xl text-primary mb-5"></i>
+    <span class="text-2xl font-bold">Server Offline</span>
+    <span >Please check back later.</span>
+    <button class="btn btn-xs mt-2" @click="reload()">Reload</button>
+  </div>
+  <div v-else-if="ready" class="w-full h-svh">
     <SideBar ref="sidebar" v-if="showSide">
       <template v-slot:sidebar>
         <div class="flex items-center px-4 py-4 gap-2">

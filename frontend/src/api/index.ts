@@ -34,6 +34,10 @@ export default {
   c: client,
 
 
+  health: () => {
+    return client.get<{"status":string}>("health");
+  },
+
   //MARK: Auth
   /**
    * # Auth API
