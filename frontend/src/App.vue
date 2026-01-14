@@ -14,7 +14,10 @@ import Modal from './components/Modal.vue';
 import SimpleModal from './components/Global/SimpleModal.vue';
 import AboutModal from './components/modals/AboutModal.vue';
 import Shortcuts from './components/modals/ShortcutsModal.vue';
+import { useGlobalState } from './stores/global';
 
+
+const global = useGlobalState();
 const auth = useAuthStore();
 const router = useRouter();
 
@@ -97,6 +100,7 @@ function accountMenuHandler(id:string) {
   if (id == "logout") {
     simpleModal.value?.confirm("Logout?","Really Logout?").then(d => {
       if (d) {
+        global.clearOpenNote();
         auth.logout();
       }
     })
@@ -163,6 +167,9 @@ function detectHelpKey(e:KeyboardEvent) {
   <ChangelogCheck></ChangelogCheck>
   <SimpleModal ref="simple-modal"/>
   <ContextMenu ref="ctxMn"/>
+
+
+  <div id="modals"></div>
 </template>
 
 <style scoped></style>

@@ -1,9 +1,12 @@
 <script setup lang="ts">
 
 import Api from '@/api';
+import Modal from '@/components/Modal.vue';
 import { useAuthStore } from '@/stores/auth';
+import { useGlobalState } from '@/stores/global';
 import type { AxiosError, AxiosResponse } from 'axios';
 import { inject, onMounted, ref } from 'vue';
+const global = useGlobalState();
 const auth = useAuthStore();
 const noti = inject<NotificationProvider>("notifications");
 
@@ -70,7 +73,8 @@ function getUserInfo() {
         }
     }).catch((error:AxiosError) => {
         console.log("ERR", error);
-        noti?.add("Failed to Login","error")
+        noti?.add("Failed to Login","error");
+        global.clearOpenNote();
         auth.logout()
     }).finally(() => {
         isAfterLogin.value = false;
@@ -89,7 +93,6 @@ onMounted(() => {
 </script>
 
 <template>
-    
     <div class="flex justify-center items-center w-full h-full flex-col gap-6">
         <img src="/assets/icons/color.svg">
         <div v-if="isAfterLogin">

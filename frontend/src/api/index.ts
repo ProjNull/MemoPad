@@ -3,8 +3,13 @@ import axios, { Axios, type AxiosResponse } from 'axios'
 import { useAuthStore } from '@/stores/auth'
 
 
+var apiBase = import.meta.env.VITE_API_URL ?? "$BASE/api/"
+
+
+apiBase = apiBase.replace("$BASE",import.meta.env.BASE_URL);
+
 const client = axios.create({
-  baseURL: "/api"
+  baseURL: apiBase
 })
 
 client.interceptors.request.use((config) => {

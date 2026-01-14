@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia'
 
-
 export interface AuthState {
   token: string | null
   user: API.UserInfo | null
@@ -39,6 +38,7 @@ export const useAuthStore = defineStore('auth', {
     },
 
     logout() {
+      
       this.token = null
       this.user = null
       localStorage.removeItem('token')

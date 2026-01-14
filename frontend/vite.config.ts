@@ -11,6 +11,10 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
   
+  console.log("Mode:",mode);
+
+  console.log("API Endpoint:",env.VITE_API_URL)
+
   const base:UserConfig = {
     plugins: [
       tailwindcss(),

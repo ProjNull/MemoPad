@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, provide, ref, useTemplateRef, type StyleValue } from 'vue';
+import {onMounted, provide, ref, Teleport, useTemplateRef, type StyleValue } from 'vue';
 
 const props = defineProps<{
     style?: StyleValue,
@@ -62,11 +62,13 @@ onMounted(() => {
 </script>
 
 <template>
-    <dialog v-if="showModal" closeby="none" ref="modal" class="modal backdrop-blur-xs z-30 p-2" >
-        <div class="modal-box border border-base-200" :style="style" :class="class">
-            <slot></slot>
-        </div>
-    </dialog>
+    <teleport to="#modals">
+        <dialog v-if="showModal" closeby="none" ref="modal" class="modal backdrop-blur-xs z-30 p-2" >
+            <div class="modal-box border border-base-200" :style="style" :class="class">
+                <slot></slot>
+            </div>
+        </dialog>
+    </teleport>
 </template>
 
 <style lang="css" scoped>
