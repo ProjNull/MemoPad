@@ -1,5 +1,7 @@
 {
     "name": "Memopad",
     "description": "A simple note service.",
+    "by-null": true,
+    "categories": ["productivity"],
     "icon": "$APP/assets/icons/favicon.png"
 }

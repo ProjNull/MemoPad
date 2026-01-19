@@ -56,14 +56,18 @@ async function saveChanges() {
                 }
             }
         }
-        if (title.value != note.value.title) {
-            const newTitle = await api.notes.rename(note.value.id, title.value)
-            if (newTitle.status == 200) {
-                if (global.$state.openNote) {
-                    global.$state.openNote.title = newTitle.data.title
+        if (title.value && title.value.trim() != "") {
+            if (title.value != note.value.title) {
+                const newTitle = await api.notes.rename(note.value.id, title.value)
+                if (newTitle.status == 200) {
+                    if (global.$state.openNote) {
+                        global.$state.openNote.title = newTitle.data.title
+                    }
                 }
+                
             }
-            
+        } else {
+            title.value = note.value.title
         }
         noti?.add("Saved","success");
         return true
@@ -141,10 +145,15 @@ onUnmounted(() => {
 
 <template>
 
-<div class="navbar bg-base-100 border-b border-b-base-200 shadow-sm flex-nowrap">
+<div class="navbar bg-base-100 border-b border-b-base-200 shadow-sm flex-nowrap gap-2">
   <div class="flex-1 flex grow flex-nowrap basis-0 items-center min-w-0">
     <a class="btn btn-ghost btn-square md:hidden" @click="sidebar?.open()"><i class="bi bi-list"></i></a>
-    <span class="text-xl block mx-2 text-ellipsis text-nowrap overflow-x-hidden min-w-0 grow shrink">{{ note?.title ?? "Home" }}</span>
+    <template v-if="note && isEdit">
+        <input class="input w-full text-xl" v-model="title" :placeholder="note.title">
+    </template>
+    <template v-else>
+        <span class="text-xl block mx-2 text-ellipsis text-nowrap overflow-x-hidden min-w-0 grow shrink">{{ note?.title ?? "Home" }}</span>
+    </template>
   </div>
   <!-- <div class="flex-none hidden md:block"> -->
   <div class="flex-none">
@@ -168,7 +177,7 @@ onUnmounted(() => {
 
     <template v-if="isEdit">
         <div class="md:px-2 grow">
-        <!--<input class="input w-full text-2xl font-black mt-4" v-model="title" :placeholder="note.title">
+        <!--
         <div class="divider my-0"></div>-->
             <textarea ref="textedit" @keydown="tabPrevent" class="w-full bg-base-200/20 font-mono textarea grow h-full resize-none rounded-none border-0 md:border-x border-y-0 p-2 py-4 overflow-y-auto focus:outline-0 border-base-200 focus:border-base-200" v-model="content"></textarea>
         </div>
