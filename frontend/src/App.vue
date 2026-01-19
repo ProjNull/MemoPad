@@ -204,7 +204,7 @@ function reload() {
   <ContextMenu ref="ctxMn"/>
 
 
-  <div id="modals"></div>
+  
 </template>
 
 <style scoped></style>

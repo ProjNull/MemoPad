@@ -36,7 +36,7 @@ declare namespace API {
     type NoteInfo = {
         id: number,
         title: string,
-        content: string,
+        content?: string,
         folderId: number,
         ownerId: number
     }

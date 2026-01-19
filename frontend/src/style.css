@@ -3,8 +3,9 @@
 @plugin "daisyui";
 
 
-
-
+body {
+  user-select: none;
+}
 
 @plugin "daisyui/theme" {
   name: "memopad";

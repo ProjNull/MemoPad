@@ -29,6 +29,7 @@ function loadFolder() {
     if (notes.value == undefined) {
         api.folders.getSubNotes(props.folder.id).then((req) => {
             notes.value = req.data 
+            notes.value.forEach((n) => n.content = undefined);
             dummyItems.value -= props.folder.noteIds.length
         })
     }
@@ -155,15 +156,7 @@ const sortedNotes = computed(()=> {
                 <span v-if="folder.name" class="grow min-w-0 text-ellipsis text-nowrap overflow-x-hidden shrink basis-0" >{{ folder.name }}</span>
             </button>
             
-        
-            
-
-            
-
-
             <button @click="ctmn?.open(menuOtions,handleCTMN,$event.target)" tabindex="1" class="btn btn-xs btn-ghost"><i class="bi bi-three-dots-vertical"></i></button>
-            
-
         </div>
 
         

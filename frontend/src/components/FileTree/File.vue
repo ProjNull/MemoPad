@@ -77,11 +77,18 @@ async function openNote() {
 
 
     const n = noti?.add("Opening...","progress");
-    api.notes.get(props.note.id).then((res) => {
+    if (!props.note.content) {
+        api.notes.get(props.note.id).then((res) => {
+            n?.close();
+            sidebar?.close()
+            Object.assign(props.note,res.data);
+            global.setOpenNote(props.note);
+        })
+    } else {
         n?.close();
         sidebar?.close()
-        global.setOpenNote(res.data);
-    })
+        global.setOpenNote(props.note);
+    }
 }
 
 </script>

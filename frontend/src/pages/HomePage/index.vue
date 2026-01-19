@@ -35,7 +35,7 @@ watch(note, (n,o)  => {
     if (!n) return;
 
     if (o && n.id != o.id) isEdit.value = false;
-    content.value = n.content
+    content.value = n.content ?? ""
     title.value = n.title
 },{immediate: true})
 
